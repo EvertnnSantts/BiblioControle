@@ -1,7 +1,6 @@
 <h1>BiblioEduca<h1/>
 
 > Developer: Everton Ferreira
-> ##
 > Status: Development⚠️
 
 ## Description
