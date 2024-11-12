@@ -1,10 +1,8 @@
-# BiblioEduca
+<h1>BiblioEduca<h1/>
 
-## Developer
-**Everton Ferreira**
-
-## Status
-In Development
+> Developer: Everton Ferreira
+> ##
+> Status: Development⚠️
 
 ## Description
 BiblioEduca is a system designed to simplify the daily operations of a library. It helps streamline processes that were previously done manually, ensuring greater efficiency and security in managing library data.
