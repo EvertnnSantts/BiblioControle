@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="PT-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiblioEduca</title>
+    <link rel="icon" type="image/x-icon" href="../public/IMG/logobiblioeduca.png">
+    <link rel="stylesheet" href="../public/UserConnect.css">
+</head>
+<body>
+    <section class="orggeral">
+        <nav class="menu">
+            <button id="buttonuno"><a href="/MyBiblioteca">BuscaLiterária</a></button>
+            <button id="buttonduo"><a href="/BiblioControle">CadLivros</a></button>
+            <div class="orgfiltro"></div>
+            <h1 id="BiblioEduca">BiblioEduca</h1>
+        </nav>
+        <div class="display">
+        <section class="cards">
+            <div class="cardAluno">
+                <h1 id="Titlecadastrousuario">CADASTRO DE USUARIOS</h1>
+                <form  id="cadastrousuarios" action="/cadastrousuarios" method="post">
+                    <h1 id="TitulocardAluno"></h1>
+                     <div class="orglayoutnomeemal">
+                        <div class="inputnome">
+                            <input type="text" name="nome" id="nome">
+                            <label for="nome" id="labelnome">nome</label>
+                        </div>
+                        <div class="inputemail">
+                            <input type="email" name="email" id="email">
+                            <label for="email" id="labelemail">email</label>
+                        </div>
+                     </div>
+                     <div class="orglayoutsenhaetelefone">
+                        <div class="inputsenha">
+                            <input type="password" name="senha" id="senha">
+                            <label for="senha" id="labelsenha">senha</label>
+                        </div>
+                        <div class="inputtelefone">
+                            <input type="number" name="telefone" id="telefone">
+                            <label for="telefone" id="labeltelefone">telefone</label>
+                        </div>
+                     </div>
+                     <div class="orgendereco">
+                        <div class="inputendereco">
+                            <input type="text" name="endereco" id="endereco">
+                            <label for="endereco" id="labeltelefone">endereço</label>
+                        </div>
+                     </div>
+                     <div class="orgloyoutmatriculacurso">
+                         <div class="inputmatricula">
+                            <input type="number" name="matricula" id="matricula">
+                            <label for="matricula" id="labelmatricula">matricula</label>
+                         </div>
+                         <div class="inputcurso">
+                            <select name="curso" id="curso">
+                                <option value="sem valor">cursos</option>
+                                <option value="finanças">finanças</option>
+                                <option value="novo ensino medio">novo ensino medio</option>
+                                <option value="novo ensino medio">professor</option>
+                              </select>
+                         </div>
+                     </div>
+                     <div class="buttonadicionarusuario">  
+                        <button type="submit" id="adicionarusuario">PRONTO</button>
+                    </div>
+                </form>
+            </div>
+                <section class="tablesUsuarios">
+                    <table id="usuarios">
+                        <thead>
+                         <tr>
+                            <th>USUARIO</th>
+                            <th>TELEFONE</th>
+                            <th>EMAIL</th>
+                            <th>CURSO</th>
+                            <th>MATRICULA</th>
+                            <th>ENDEREÇO</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <% usuarios.forEach(function(usuario) { %>
+                                <tr>
+                                  <td><%= usuario.nome %></td>
+                                  <td><%= usuario.telefone %></td>
+                                  <td><%= usuario.email %></td>
+                                  <td><%= usuario.curso %></td>
+                                  <td><%= usuario.matricula %></td>
+                                  <td><%= usuario.endereco %></td>
+                                </tr>
+                              <% }); %>
+                        </tbody>
+                    </table>
+                </section> 
+            </div>
+        </section>
+</body>
+<script src="../public/JS/UserConnect.js"></script>
+</html>

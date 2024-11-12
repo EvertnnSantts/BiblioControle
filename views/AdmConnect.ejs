@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="PT-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../public/IMG/logobiblioeduca.png">
+    <link rel="stylesheet" href="../public/AdmConnect.css">
+    <title>BiblioEduca</title>
+</head>
+<body>
+    <section class="org-gral">
+        <nav class="menu">
+            <button id="buttonuno"><a href="/MyBiblioteca">BuscaLiterária</a></button>
+            <button id="buttonduo"><a href="/BiblioControle">CadLivros</a></button>
+            <button id="buttontwo"><a href="/cadastrousuarios">UserConnect</a></button>
+            <div class="orgfiltro"></div>
+            <h1 id="BiblioEduca">BiblioEduca</h1>
+        </nav>
+        <section class="cards">
+             <div class="orgtextusuarios">
+                <h1 id="usuariostitle">MEUS USUARIOS</h1>
+             </div>
+            <section class="tablesUsuarios">
+                <table id="usuarios">
+                    <thead>
+                     <tr>
+                        <th>USUARIO</th>
+                        <th>TELEFONE</th>
+                        <th>EMAIL</th>
+                        <th>CURSO</th>
+                        <th>MATRICULA</th>
+                        <th>ENDEREÇO</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <% usuarios.forEach(function(usuario) { %>
+                            <tr>
+                              <td><%= usuario.nome %></td>
+                              <td><%= usuario.telefone %></td>
+                              <td><%= usuario.email %></td>
+                              <td><%= usuario.curso %></td>
+                              <td><%= usuario.matricula %></td>
+                              <td><%= usuario.endereco %></td>
+                            </tr>
+                          <% }); %>
+                    </tbody>
+                </table>
+            </section>
+            </section>
+        </section>
+    </section>
+    <script src="../public/JS/AdmConnect.js"></script>
+</body>
+</html>

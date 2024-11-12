@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiblioEduca</title>
+    <link rel="icon" type="image/x-icon" href="../public/IMG/logobiblioeduca.png">
+    <link rel="stylesheet" href="../public/Biblioteca.css">
+</head>
+<body>
+    <nav class="menu">
+        <button id="buttonuno"><a href="/BiblioControle">CadLivros</a></button>
+        <button id="buttontwo"><a href="/cadastrousuarios">UserConnect</a></button>
+        <h1 id="BiblioEduca">BiblioEduca</h1>
+    </nav>
+    <section class="graficos">
+        <div class="GraficoLivroTotais">
+            <h1 id="titlelivrostotais">LIVROS TOTAIS</h1>
+            <h1 id="infograficoLivrosTotais"><%= TotalUsuarios %></h1>
+        </div>
+        <div class="GraficoLivroPendentes">
+            <h1 id="titlelivrospendentes">LIVROS EM MOVIMENTO</h1>
+            <h1 id="infoLivrosPendentes"><%= LivrosPendentes %></h1>
+        </div>
+        <div class="GraficousUsuariosTotais">
+            <h1 id="titleusuariostotais">USUARIOS TOTAIS</h1>
+            <h1 id="infograficoUsuariototais"><%= LivrosTotais %></h1>
+        </div>
+        <div class="GraficoUsuariosSuspenso">
+            <h1 id="titleusuariosuspenso">USUARIOS SUSPENSO</h1>
+            <h1 id="infograficousuriossupenso"><%= UsuariosBloqueados %></h1>
+        </div>
+        <div class="GraficoAdministradores">
+            <h1 id="titledministradores">ADMINISTRADORES</h1>
+            <h1 id="infograficodministradores"><%= Administradores %></h1>
+        </div>
+    </section>
+    <section class="filtro">
+        <select id="clasificacao" name="clasificacao">
+            <option value="todos">gênero</option>
+            <option value="ACAO">Ação</option>
+            <option value="FICCAO-CIENTIFICA">Ficção Cientifica</option>
+            <option value="ROMANCE">Romance</option>
+            <option value="FANTASIA">Fantasia</option>
+            <option value="MISTERIO-THRILLER">Mistério & Thriller</option>
+            <option value="HORROR">Horror</option>
+            <option value="AVENTURA">Aventura</option>
+            <option value="HISTORICO">Histórico</option>
+            <option value="REALISMO-MAGICO">Realismo Mágico</option>
+            <option value="FICCAO-HISTORICA">Ficção Histórica</option>
+            <option value="BIOGRAFIA">Biografia</option>
+            <option value="AUTOBIOGRAFIA">Autobiografia</option>
+            <option value="MEMORIAS">Memórias</option>
+            <option value="ENSAIOS">Ensaios</option>
+            <option value="JORNALISMO">Jornalismo</option>
+            <option value="HISTORIA">História</option>
+            <option value="CIENCIA">Ciência</option>
+            <option value="PSICOLOGIA">Psicologia</option>
+            <option value="FILOSOFIA">Filosofia</option>
+            <option value="POLITICA">Política</option>
+            <option value="POESIA-CONTEMPORANEA">Poesia Contemporânea</option>
+            <option value="POESIA-CLASSICA">Poesia Clássica</option>
+            <option value="HAICAI">Haicai</option>
+            <option value="ÉPICA">Épica</option>
+            <option value="PEÇAS-TEATRAIS">Peças Teatrais</option>
+            <option value="DRAMATURGIA">Dramaturgia</option>
+            <option value="DIDATICOS">Didáticos</option>
+            <option value="MONOGRAFIAS">Monografias</option>
+            <option value="ACADEMICOS">Acadêmicos</option>
+            <option value="AUTOAJUDA">Autoajuda</option>
+            <option value="DESENVOLVIMENTO-PESSOAL">Desenvolvimento Pessoal</option>
+            <option value="MOTIVACAO">Motivação</option>
+            <option value="BIBLIA">Bíblia</option>
+            <option value="RELIGIOSOS">Religiosos</option>
+            <option value="FILOSOFIA-RELIGIOSA">Filosofia Religiosa</option>
+            <option value="DE-RECEITAS">Receitas</option>
+            <option value="GASTRONOMIA">Gastronomia</option>
+            <option value="ARTE">Arte</option>
+            <option value="FOTOGRAFIA">Fotografia</option>
+            <option value="ARQUITETURA">Arquitetura</option>
+            <option value="ASTRONOMIA">Astronomia</option>
+            <option value="BIOLOGIA">Biologia</option>
+            <option value="ECOLOGIA">Ecologia</option>
+            <option value="GEOLOGIA">Geologia</option>
+            <option value="FISICA">Física</option>
+            <option value="QUIMICA">Química</option>
+            <option value="SUPER-HEROIS">Super-heróis</option>
+            <option value="MANGAS-JAPONESES">Mangás Japoneses</option>
+            <option value="GRAPHIC-NOVELS">Graphic Novels</option>
+            <option value="INFANTIS-E-INFANTOJUVENIS:">Infantis e Infantojuvenis</option>
+            <option value="NEGOCIOS">Negócios</option>
+            <option value="ECONOMIA">Economia</option>
+            <option value="FINANCAS">Finanças</option>
+            <option value="TECNOLOGIA">Tecnologia</option>
+            <option value="PROGRAMACAO">Programação</option>
+            <option value="CIENCIA-DA-COMPUTACAO">Ciência da Computação</option>
+            <option value="GUIAS-DE-VIAGEM">Guias de Viagem</option>
+            <option value="AVENTURAS-DE-VIAGEM">Aventuras de Viagem</option>
+            <option value="ESPORTIVOS">Esportivos</option>
+            <option value="JOGOS-E-PASSATEMPOS">Jogos e Passatempos</option>
+            <option value="SUSPENSE">Suspense</option>
+            <option value="MEIO-AMBIENTE">Meio Ambiente</option>
+            <option value="SUSTENTABILIDADE">Sustentabilidade</option>            
+          </select>
+          <select id="autor" name="autor">
+            <option value="todos">autor</option>
+            <% autores.forEach(autorcad => { %> 
+                <option value="<%= autorcad %>"><%= autorcad %></option> 
+            <% }); %>
+        </select>
+        </section>    
+    <section class="tabela" >
+        <table id="livros">
+            <thead>
+                <tr>
+                    <th>TOMBO</th>
+                    <th>TÍTULO</th>
+                    <th>AUTOR</th>
+                    <th>QUANTIDADE</th>
+                    <th>ESTANTE</th>
+                    <th>GÊNERO</th>
+                    <th>SITUAÇÃO</th>
+                    <th>OBSERVAÇÃO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% livros.forEach(livro => { %>
+                    <tr>
+                        <td><%= livro.id %></td>
+                        <td><%= livro.titulocad %></td>
+                        <td><%= livro.autorcad %></td>
+                        <td><%= livro.quantidadecad %></td>
+                        <td><%= livro.estantecad %></td>
+                        <td><%= livro.generocad %></td>
+                        <td><%= livro.situacaocad %></td>
+                        <td><%= livro.observacaocad %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table> 
+    </section>    
+   <script src="../public/JS/FiltroMyBiblioteca.js"></script>
+</body>
+</html>

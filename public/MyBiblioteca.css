@@ -1,0 +1,221 @@
+body{
+    margin: auto;
+    height: 100vh;
+    width: 100vw;
+    background: #254e5b;
+}
+
+.menuopcao{
+   height: 100%;
+   width: 15%;
+   position: absolute;
+   display: flex;
+   gap: 20px;
+   flex-direction: column;
+   background: #00222e;
+}
+
+.titleMenu{
+  width: 100%;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#titleBiblioEduca{
+   font-family: Arial, Helvetica, sans-serif;
+   color: #cfcfcf;
+   font-size: 30px;
+}
+
+.buttonsMenu{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
+   gap: 10px;
+   width: 100%;
+   height: 200px;
+}
+#ButtonBiblioControle, #ButtoNMeusUsuarios, #ButtonPOrtalUsuarios, #ButtonMyBiblioteca{
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+  height: 40px;
+  width: 70%;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  color: #00222e;
+  background: #cfcfcf;
+}
+
+#ButtonBiblioControle:hover, #ButtoNMeusUsuarios:hover, #ButtonPOrtalUsuarios:hover, #ButtonMyBiblioteca:hover{
+  transition: 0.7s;
+  opacity: 0.8;
+}
+
+.barrasearch{
+   width: 62%;
+   min-height: 50px;
+   display: flex;
+   justify-content: baseline;
+   align-items: center;
+   gap: 5px;
+   margin: 0%;  
+   margin-bottom: 10px;
+}
+
+#consulta{
+   outline: none;
+   border: 1px solid #00222e;;
+   border-radius: 5px;
+   height: 30px;
+   width: 600px;
+   background:#cfcfcf;
+}
+
+#buttonsearch{
+  outline: none;
+  border: none;
+  width: 100px;
+  height: 30px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #cfcfcf;
+  cursor: pointer;
+  border-radius: 5px;
+  background: #00222e;
+}
+
+.orggeral{
+  min-width: 10px;
+  min-height: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tablesGraficos{
+    min-width: 950px;
+    min-height: 100px;
+    display: flex;
+    justify-content: baseline;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+}
+
+.graficototallivros, .graficoLivrosPendentes, .graficoUsuarios, .graficoUsuariosBloqueados{
+    width: 200px;
+    height: 100px;
+    border-radius: 5px;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    justify-items: center;
+    flex-direction: column;
+    align-items: center;
+    background: #00222e;
+}
+
+.graficototallivros:hover, .graficoLivrosPendentes:hover, .graficoUsuarios:hover, .graficoUsuariosBloqueados:hover{
+    width: 210px;
+    height: 110px;
+    transition: 0.7s;
+    cursor: pointer;
+}
+
+.TitleTotalLivros, .TitleLivrosPendentes, .TitleUsuarios, .TitleUsuariosBloqueados{
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #cfcfcf;
+    margin: 0%;
+}
+
+.totallivros, .LivrosPendentes, .ListaUsuarios, .UsuariosBloqueados{
+    font-size: 30px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #cfcfcf;
+    margin: 0%;
+}
+
+.filtro{
+  width: 61%;
+  height: 50px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+#clasificacao{
+  width: 200px;
+  height: 30px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #00222e;
+  border-radius: 5px;
+  background: none;
+  outline: none;
+  border: 1px solid #00222e;
+}
+
+option{
+  background: none;
+}
+.tabela{
+    min-height: 300px;
+    max-height: 200px; 
+    overflow-y: auto; 
+    overflow-x: auto;
+}
+
+/* Estiliza a barra de rolagem para navegadores WebKit */
+/* Mudar a cor de fundo da barra de rolagem */
+::-webkit-scrollbar {
+  width: 10px; /* Largura da barra de rolagem */
+  background-color: none; /* Cor de fundo da barra de rolagem */
+}
+
+/* Mudar a cor do indicador de rolagem */
+::-webkit-scrollbar-thumb {
+  background-color: #00222e; /* Cor do indicador de rolagem */
+  border-radius: 5px; /* Borda arredondada */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #00222e;
+  }
+  th {
+    background-color: #00222e;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #cfcfcf;
+  }
+
+  td{
+    font-family: Arial, Helvetica, sans-serif;
+    color: #cfcfcf;
+  }
+  tr:hover {
+    background-color: #265f70;
+    transition: 0.5s;
+    opacity: 0.9;
+}
+
+
+a{
+  text-decoration: none;
+  color: #00222e;
+}
+
+@media (max-width: 768px) {
+   
+}

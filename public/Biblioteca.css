@@ -1,0 +1,143 @@
+body{
+    margin: auto;
+    background: #000524;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.menu{
+    width: 1090px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+#BiblioEduca{
+    color: white;
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    position: absolute;
+    right: 10px;
+}
+#buttonuno, #buttonduo, #buttontwo{
+   width: 200px;
+   height: 30px;
+   background: #101F78;
+   border: none;
+   border-radius: 5px;
+}
+
+a{
+    text-decoration: none;
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+.graficos{
+    width: 1300px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 22px;
+}
+
+.GraficoLivroTotais, .GraficoLivroPendentes, .GraficousUsuariosTotais, .GraficoUsuariosSuspenso, .GraficoAdministradores{
+    width: 200px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+    flex-direction: column;
+    background: #101F78;
+    border-radius: 5px;
+}
+
+#titlelivrostotais, #titlelivrospendentes, #titleusuariostotais, #titleusuariosuspenso, #titledministradores{
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    margin: 0%;
+}
+
+#infograficoLivrosTotais, #infoLivrosPendentes, #infograficoUsuariototais, #infograficousuriossupenso, #infograficodministradores{
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    margin: 0%;
+}
+
+.filtro{
+    width: 1085px;
+    height: 50px;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    gap: 10px;
+}
+
+#clasificacao, #autor{
+    width: 150px;
+    height: 30px;
+    border: none;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 5px;
+    background: #101F78;
+  }
+
+.tabela{
+    min-height: 500px;
+    min-width: 1085px; 
+    overflow-y: auto; 
+    overflow-x: auto;
+}
+
+/* Estiliza a barra de rolagem para navegadores WebKit */
+/* Mudar a cor de fundo da barra de rolagem */
+::-webkit-scrollbar {
+  width: 10px; /* Largura da barra de rolagem */
+  background-color: none; /* Cor de fundo da barra de rolagem */
+}
+
+/* Mudar a cor do indicador de rolagem */
+::-webkit-scrollbar-thumb {
+  background-color: #00222e; /* Cor do indicador de rolagem */
+  border-radius: 5px; /* Borda arredondada */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #101F78;
+  }
+  th {
+    background-color: #101F78;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #cfcfcf;
+  }
+
+  td{
+    font-family: Arial, Helvetica, sans-serif;
+    color: #cfcfcf;
+  }
+  tr:hover {
+    background-color: #101F78;
+    transition: 0.5s;
+    opacity: 0.5;
+}

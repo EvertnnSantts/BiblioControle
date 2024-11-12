@@ -1,0 +1,246 @@
+body{
+    margin: auto;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    background: #000524;
+}
+
+.menu{
+    width: 1170px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+#BiblioEduca{
+    color: white;
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    position: absolute;
+    right: 10px;
+}
+
+#buttonuno, #buttonduo, #buttontwo{
+    width: 200px;
+    height: 30px;
+    background: #101F78;
+    border: none;
+    border-radius: 5px;
+ }
+
+ a{
+    text-decoration: none;
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+.Org-Geral{
+    width: 85%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.TitleTotalLivros, .TitleLivrosPendentes, .TitleUsuarios, .TitleUsuariosBloqueados{
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #cfcfcf;
+    margin: 0%;
+}
+
+.totallivros, .LivrosPendentes, .ListaUsuarios, .UsuariosBloqueados{
+    font-size: 30px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #cfcfcf;
+    margin: 0%;
+}
+
+ .barrasearch{
+    width: 62%;
+    min-height: 50px;
+    display: flex;
+    justify-content: baseline;
+    align-items: center;
+    gap: 5px;
+    margin: 0%;  
+    margin-bottom: 10px;
+ }
+.cadastros{
+    width: 95%;
+    height: 500px;
+    border-radius: 10px;
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.cadastrolivros, .entradalivros , .saidalivro{
+    width: 379px;
+    height: 338px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    border-radius: 10px;
+    border: 0px solid #101F78;
+    background: #cfcfcf;
+    box-shadow: 10px 4px 10px 0px rgba(0, 0, 0, 0.25);
+}
+
+.organizacaolouyatobservacaoeusuario, .organizacaolouyattituloautorcad, .organizacaolouyatfileiraestantecad, .organizacaolouyatsituacaogenerocad, .organizacaoloyuattituloid, .organizacaoloyuatnometelefone, .organizacaaolouyattituloautor, .organizacaolouyatfileiraestante, .organizacaolouyatclasificaoepcon, .organizacaoloyuatcursoturma{
+    min-width: 10px;
+    min-height: 10px;
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.inputobservacaocad, .inputenderecosaida{
+    min-width: 10px;
+    min-height: 10px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.inputtitulocad, .inputautorcad, .inputfileiracad, .inputestantecad, .inputusuario, .inputsituacaocad, .buttonadicionarusuario, .inputtitulo, .inputautor, .inputfileira, .inputestante, .inputobservacao, .inputclasificacao, .inputepecon, .inputtitulosaida, .inputid, .inputnomesaida, .inputtelefonesaida, .inputcursosaida, .inputturma{
+    min-width: 20px;
+    min-height: 20px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#observacaocad, #enderecosaida{
+    width: 318px;
+    height: 32px;
+    outline: none;
+    text-align: center;
+    color: #101F78;
+    border-radius: 10.894px;
+    border: 1px solid #101F78;
+    background: #cfcfcf;
+}
+#endereco:hover, #observacao:hover, #enderecosaida:hover{
+    transition: 0.5s;
+    border: 1px solid #cfcfcf;
+}
+
+#titulocad, #autorcad, #fileiracad, #estantecad, #observacao, #usuario, #matricula, #titulo, #autor, #fileira, #estante, #titulosaida, #id, #nomesaida, #telefonesaida, #turma{
+    width: 152px;
+    height: 33px;
+    outline: none;
+    border: none;
+    text-align: center;
+    border-radius: 10px;
+    color: #101F78;
+    border: 1px solid #101F78;
+    background: #cfcfcf;
+}
+
+#nome:hover, #email:hover, #senha:hover, #telefone:hover, #matricula:hover, #titulo:hover, #autor:hover, #fileira:hover, #estante:hover, #titulosaida:hover, #id:hover, #nomesaida:hover, #telefonesaida:hover, #turma:hover{
+    transition: 0.5s;
+    border: 1px solid #cfcfcf;
+}
+
+#togglePassword {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    font-size: small;
+    color: #101F78;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+#Titlecadastrousuario, #titlecadasttrolivro, #titlesaidadelivro{
+    color: #101F78;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+#situacaocad, #generocad, #clasificacao, #epecon, #cursosaida{
+    width: 152px;
+    height: 33px;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+    border: 1px solid #101F78;
+    background: #cfcfcf;
+    cursor: pointer;
+}
+
+#curso:hover,#clasificacao:hover, #epecon:hover, #cursosaida:hover{
+    transition: 0.5s;
+    border: 1px solid #cfcfcf;
+}
+
+#labelusuario, #labeltitulocad, #labelautorcad, #labelfileiracad, #labelestantecad, #labelobservacaocad, #labeltitulo, #labelautor, #labelfileira, #labelestante, #labeltitulosaida, #Labelnomesaida, #labeltelefonesaida, #labelid, #labelturma{
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    color: #101F78;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#labelndereco, #labelobservacao, #labelenderecosaida{
+    position: absolute;
+    font-family: Arial, Helvetica, sans-serif;
+    top: 8px;
+    left: 10px;
+    font-size: 14px;
+    color: #101F78;
+}
+
+#adicionarusuario, #entradadelivro, #saidadelivro{
+    width: 316px;
+    height: 36px;
+    margin-top: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    background: #101F78;
+    color: white;
+}
+
+#adicionarusuario:hover, #entradadelivro:hover, #saidadelivro:hover{
+    background: #101F78;
+    transition: 0.5s;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+select{
+    color: #101F78;
+}
+
+

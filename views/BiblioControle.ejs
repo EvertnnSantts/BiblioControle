@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="PT-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioeduca</title>
+    <link rel="stylesheet" href="../public/BiblioControle.css">
+    <link rel="icon" type="image/x-icon" href="../public/IMG/logobiblioeduca.png">
+</head>
+<body>
+   <section class="Org-Geral">
+    <nav class="menu">
+        <button id="buttonuno"><a href="/MyBiblioteca">BuscaLiterária</a></button>
+        <button id="buttontwo"><a href="/cadastrousuarios">UserConnect</a></button>
+        <h1 id="BiblioEduca">BiblioEduca</h1>
+    </nav>
+    <section class="cadastros">
+        <!--Cadastro de livro-->
+            <section class="cadastrolivros">
+             <form id="cadastrolivro" action="/cadastrolivro" method="post">
+                <h1 id="Titlecadastrousuario">CADASTRO DE LIVRO</h1>
+                <div class="organizacaolouyattituloautorcad">
+                    <div class="inputtitulocad">
+                        <input type="text" name="titulocad" id="titulocad">
+                        <label for="titulocad"  id="labeltitulocad">titulo</label>
+                    </div>
+                    <div class="inputautorcad">
+                       <input type="text" name="autorcad" id="autorcad">
+                       <label for="autorcad"  id="labelautorcad">autor</label>
+                    </div>
+                </div>
+                <div class="organizacaolouyatfileiraestantecad">
+                    <div class="inputfileiracad">
+                        <input type="number" name="quantidadecad" id="fileiracad">
+                        <label for="fileiracad"  id="labelfileiracad">quantidade</label>
+                    </div>
+                    <div class="inputestantecad">
+                        <input type="text" name="estantecad" id="estantecad">
+                        <label for="estantecad" id="labelestantecad">estante</label>
+                    </div>
+                </div>
+                <div class="inputobservacaocad">
+                    <input type="text" name="observacaocad" id="observacaocad">
+                    <label for="observacaocad" id="labelobservacaocad">observação</label>
+                </div>
+                <div class="organizacaolouyatsituacaogenerocad">
+                    <div class="inputsituacaocad">
+                        <select name="situacaocad" id="situacaocad">
+                            <option value="sem valor">situação</option>
+                            <option value="emprestimo">emprestimo</option>
+                            <option value="consulta">consulta</option>
+                          </select>
+                    </div>
+                    <div class="inputcurso">
+                       <select name="generocad" id="generocad">
+                        <option value="ACAO">Ação</option>
+                        <option value="FICCAO-CIENTIFICA">Ficção Cientifica</option>
+                        <option value="ROMANCE">Romance</option>
+                        <option value="FANTASIA">Fantasia</option>
+                        <option value="MISTERIO-THRILLER">Mistério & Thriller</option>
+                        <option value="HORROR">Horror</option>
+                        <option value="AVENTURA">Aventura</option>
+                        <option value="HISTORICO">Histórico</option>
+                        <option value="REALISMO-MAGICO">Realismo Mágico</option>
+                        <option value="FICCAO-HISTORICA">Ficção Histórica</option>
+                        <option value="BIOGRAFIA">Biografia</option>
+                        <option value="AUTOBIOGRAFIA">Autobiografia</option>
+                        <option value="MEMORIAS">Memórias</option>
+                        <option value="ENSAIOS">Ensaios</option>
+                        <option value="JORNALISMO">Jornalismo</option>
+                        <option value="HISTORIA">História</option>
+                        <option value="CIENCIA">Ciência</option>
+                        <option value="PSICOLOGIA">Psicologia</option>
+                        <option value="FILOSOFIA">Filosofia</option>
+                        <option value="POLITICA">Política</option>
+                        <option value="POESIA-CONTEMPORANEA">Poesia Contemporânea</option>
+                        <option value="POESIA-CLASSICA">Poesia Clássica</option>
+                        <option value="HAICAI">Haicai</option>
+                        <option value="ÉPICA">Épica</option>
+                        <option value="PEÇAS-TEATRAIS">Peças Teatrais</option>
+                        <option value="DRAMATURGIA">Dramaturgia</option>
+                        <option value="DIDATICOS">Didáticos</option>
+                        <option value="MONOGRAFIAS">Monografias</option>
+                        <option value="ACADEMICOS">Acadêmicos</option>
+                        <option value="AUTOAJUDA">Autoajuda</option>
+                        <option value="DESENVOLVIMENTO-PESSOAL">Desenvolvimento Pessoal</option>
+                        <option value="MOTIVACAO">Motivação</option>
+                        <option value="BIBLIA">Bíblia</option>
+                        <option value="RELIGIOSOS">Religiosos</option>
+                        <option value="FILOSOFIA-RELIGIOSA">Filosofia Religiosa</option>
+                        <option value="DE-RECEITAS">Receitas</option>
+                        <option value="GASTRONOMIA">Gastronomia</option>
+                        <option value="ARTE">Arte</option>
+                        <option value="FOTOGRAFIA">Fotografia</option>
+                        <option value="ARQUITETURA">Arquitetura</option>
+                        <option value="ASTRONOMIA">Astronomia</option>
+                        <option value="BIOLOGIA">Biologia</option>
+                        <option value="ECOLOGIA">Ecologia</option>
+                        <option value="GEOLOGIA">Geologia</option>
+                        <option value="FISICA">Física</option>
+                        <option value="QUIMICA">Química</option>
+                        <option value="SUPER-HEROIS">Super-heróis</option>
+                        <option value="MANGAS-JAPONESES">Mangás Japoneses</option>
+                        <option value="GRAPHIC-NOVELS">Graphic Novels</option>
+                        <option value="INFANTIS-E-INFANTOJUVENIS:">Infantis e Infantojuvenis</option>
+                        <option value="NEGOCIOS">Negócios</option>
+                        <option value="ECONOMIA">Economia</option>
+                        <option value="FINANCAS">Finanças</option>
+                        <option value="TECNOLOGIA">Tecnologia</option>
+                        <option value="PROGRAMACAO">Programação</option>
+                        <option value="CIENCIA-DA-COMPUTACAO">Ciência da Computação</option>
+                        <option value="GUIAS-DE-VIAGEM">Guias de Viagem</option>
+                        <option value="AVENTURAS-DE-VIAGEM">Aventuras de Viagem</option>
+                        <option value="ESPORTIVOS">Esportivos</option>
+                        <option value="JOGOS-E-PASSATEMPOS">Jogos e Passatempos</option>
+                        <option value="SUSPENSE">Suspense</option>
+                        <option value="MEIO-AMBIENTE">Meio Ambiente</option>
+                        <option value="SUSTENTABILIDADE">Sustentabilidade</option>    
+                       </select>
+                    </div>
+                </div>
+                <div class="buttonadicionarusuario">  
+                <button type="submit" id="adicionarusuario">PRONTO</button>
+                <p id="mensagem"></p>
+                </div>        
+            </form>
+            </section>
+        <!--Cadastro de livro-->
+        <div class="entradalivros">
+            <form id="entradalivro" action="/entradalivro" method="post">
+                <h1 id="titlecadasttrolivro">ENTRADA DE LIVRO</h1>
+                <div class="organizacaaolouyattituloautor">
+                    <div class="inputtitulo">
+                        <input type="text" name="titulo" id="titulo">
+                        <label for="titulo" id="labeltitulo">titulo</label>
+                    </div>
+                    <div class="inputautor">
+                        <input type="text" name="autor" id="autor">
+                        <label for="autor" id="labelautor">autor</label>
+                    </div>
+                </div>
+                <div class="organizacaolouyatfileiraestante">
+                    <div class="inputfileira">
+                        <input type="text" name="fileira" id="fileira">
+                        <label for="fileira" id="labelfileira">fileira</label>
+                    </div>
+                    <div class="inputestante">
+                        <input type="text" name="estante" id="estante">
+                        <label for="estante" id="labelestante">estante</label>
+                    </div>
+                </div>
+
+                <div class="organizacaolouyatobservacaoeusuario">
+                    <div class="inputobservacao">
+                        <input type="text" name="observacao" id="observacao">
+                    <label for="observacao" id="labelobservacao">observação</label>
+                    </div>
+                     <div class="inputusuario">
+                        <input type="text" name="usuario" id="usuario">
+                        <label for="usuario" id="labelusuario">usuario</label>
+                     </div>
+                </div>
+
+                <div class="organizacaolouyatclasificaoepcon">
+                    <div class="inputclasificacao">
+                        <select id="clasificacao" name="clasificacao">
+                            <option value="sem valor">gênero</option>
+                            <option value="acao">Ação</option>
+                            <option value="Ficcao-cientifica">Ficção Cientifica</option>
+                            <option value="romance">Romance</option>
+                            <option value="fantasia">Fantasia</option>
+                            <option value="Mistério-Thriller">Mistério & Thriller</option>
+                            <option value="Horror">Horror</option>
+                            <option value="Aventura">Aventura</option>
+                            <option value="Histórico">Histórico</option>
+                            <option value="Realismo-Mágico">Realismo Mágico</option>
+                            <option value="Ficção-Histórica">Ficção Histórica</option>
+                            <option value="Biografia">Biografia</option>
+                            <option value="Autobiografia">Autobiografia</option>
+                            <option value="Memórias">Memórias</option>
+                            <option value="Ensaios">Ensaios</option>
+                            <option value="Jornalismo">Jornalismo</option>
+                            <option value="História">História</option>
+                            <option value="Ciência">Ciência</option>
+                            <option value="Psicologia">Psicologia</option>
+                            <option value="Filosofia">Filosofia</option>
+                            <option value="Política">Política</option>
+                            <option value="Poesia-Contemporânea">Poesia Contemporânea</option>
+                            <option value="Poesia-Clássica">Poesia Clássica</option>
+                            <option value="Haicai">Haicai</option>
+                            <option value="Épica">Épica</option>
+                            <option value="Peças-Teatrais">Peças Teatrais</option>
+                            <option value="Dramaturgia">Dramaturgia</option>
+                            <option value="Didáticos">Didáticos</option>
+                            <option value="Monografias">Monografias</option>
+                            <option value="Acadêmicos">Acadêmicos</option>
+                            <option value="Autoajuda">Autoajuda</option>
+                            <option value="Desenvolvimento-Pessoal">Desenvolvimento Pessoal</option>
+                            <option value="Motivação">Motivação</option>
+                            <option value="Bíblia">Bíblia</option>
+                            <option value="Religiosos">Religiosos</option>
+                            <option value="Filosofia-Religiosa">Filosofia Religiosa</option>
+                            <option value="de-Receitas">Receitas</option>
+                            <option value="Gastronomia">Gastronomia</option>
+                            <option value="Arte">Arte</option>
+                            <option value="Fotografia">Fotografia</option>
+                            <option value="Arquitetura">Arquitetura</option>
+                            <option value="Astronomia">Astronomia</option>
+                            <option value="Biologia">Biologia</option>
+                            <option value="Ecologia">Ecologia</option>
+                            <option value="Geologia">Geologia</option>
+                            <option value="Física">Física</option>
+                            <option value="Química">Química</option>
+                            <option value="Super-heróis">Super-heróis</option>
+                            <option value="Mangás-Japoneses">Mangás Japoneses</option>
+                            <option value="Graphic-Novels">Graphic Novels</option>
+                            <option value="Infantis-e-Infantojuvenis:">Infantis e Infantojuvenis</option>
+                            <option value="Negócios">Negócios</option>
+                            <option value="Economia">Economia</option>
+                            <option value="Finanças">Finanças</option>
+                            <option value="Tecnologia">Tecnologia</option>
+                            <option value="Programacao">Programação</option>
+                            <option value="Ciência-da-Computacao">Ciência da Computação</option>
+                            <option value="Guias-de-Viagem">Guias de Viagem</option>
+                            <option value="Aventuras-de-Viagem">Aventuras de Viagem</option>
+                            <option value="Esportivos">Esportivos</option>
+                            <option value="Jogos-e-Passatempos">Jogos e Passatempos</option>
+                            <option value="Suspense">Suspense</option>
+                            <option value="Meio-Ambiente">Meio Ambiente</option>
+                            <option value="Sustentabilidade">Sustentabilidade</option>
+                            </select>
+                    </div>
+                     <div class="inputepecon">
+                        <select name="epecon" id="epecon">
+                            <option value="sem valor">situação</option>
+                            <option value="consultar">consultar</option>
+                            <option value="emprestimo">emprestimo</option>
+                        </select>
+                     </div>
+                </div>
+                <div class="buttonentradadelivro">
+                    <button type="submit" id="entradadelivro">PRONTO</button>
+                </div>
+            </form>
+        </div>
+        <!--Saida de livro-->
+        <div class="saidalivro">
+            <form action="registrosaidalivro" method="post">
+                <h1 id="titlesaidadelivro">SAIDA DE LIVRO</h1>
+                <div class="organizacaoloyuattituloid">
+                    <div class="inputtitulosaida">
+                        <input type="text" name="titulosaida" id="titulosaida">
+                        <label for="titulosaida" id="labeltitulosaida">titulo</label>
+                    </div>
+                    <div class="inputid">
+                        <input type="number" name="ids" id="id">
+                        <label for="id" id="labelid">id</label>
+                    </div>
+                </div>
+                <div class="organizacaoloyuatnometelefone">
+                    <div class="inputnomesaida">
+                        <input type="text" name="usuario" id="nomesaida">
+                        <label for="nomesaida" id="Labelnomesaida">nome</label>
+                    </div>
+                     <div class="inputtelefonesaida">
+                        <input type="number" name="telefonesaida" id="telefonesaida">
+                        <label for="telefonesaida" id="labeltelefonesaida">telefone</label>
+                     </div>
+                </div>
+                <div class="inputenderecosaida">
+                    <input type="text" name="enderecosaida" id="enderecosaida">
+                    <label for="enderecosaida" id="labelenderecosaida">endereço</label>
+                </div>
+                <div class="organizacaoloyuatcursoturma">
+                    <div class="inputcursosaida">
+                        <select name="cursosaida" id="cursosaida">
+                            <option value="sem valor">todos</option>
+                            <option value="finanças">finanças</option>
+                            <option value="novo ensino medio">novo ensino medio</option>
+                          </select>
+                    </div>
+                    <div class="inputturma">
+                        <input type="text" name="turma" id="turma">
+                        <label for="turma" id="labelturma">turma</label>
+                    </div>
+                </div>
+                <div class="buttonsaidadelivro">
+                    <button type="submit" id="saidadelivro">PRONTO</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</section>
+<!--rodape-->
+  <footer>
+  </footer>
+  <script src="../public/JS/erro.js"></script>
+  <script src="../public/JS/AniBiblioControle.js"></script>
+</body>
+</html>

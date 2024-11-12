@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="Pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <title>Biblioeduca</title>
+    <link rel="icon" type="image/x-icon" href="../public/IMG/logobiblioeduca.png">
+    <link rel="stylesheet" href="../public/LoginAdm.css">
+</head>
+<body>
+       <!--Section 'org-LoginAdm' ajudar na organização NO CSS-->
+       <section class="geral">
+        <div class="org-LoginAdm">
+            <% if (typeof message !== 'undefined' && message) { %>
+                <div id="message"><%= message %></div>
+            <% } %>
+            <h1>AcessoExecutivo</h1>
+             <!--Form de acesso com o back-end 'LoginAdm'-->
+            <form action="/Login" method="post" class="LoginAdm">
+          <!--Div 'email' para organização css-->
+           <div class="email">
+            <!--input 'Email' de acesso para adm-->
+            <input type="email" name="email" id="emailadm" autocomplete="off">
+            <label for="" id="labelemail">email</label>
+           </div>
+           <!--Div 'senha' para organização css-->
+           <div class="senha">
+            <!--input 'senha'de acesso para adm-->
+            <input type="password" name="senha" id="senhaadm" autocomplete="off">
+            <label for="" id="labelsenha">senha</label>
+           </div>
+           <!--Div 'Button' para organização css-->
+           <div class="button">
+             <button type="submit" onclick="Enviar">ENTRAR</button>
+           </div>
+        </form>
+    </div>
+ </section>
+</body>
+</html> 
