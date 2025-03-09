@@ -1,30 +1,72 @@
-<h1>BiblioEduca<h1/>
+# BiblioControle
 
 - Developer: Everton Ferreira
-- Status: Development⚠️
+- Status: Concluido
+## Descrição
+BiblioControle é um sistema projetado para simplificar as operações diárias de uma biblioteca. Ele ajuda a otimizar processos que antes eram realizados manualmente, garantindo maior eficiência e segurança na gestão dos dados da biblioteca.
 
-## Description
-BiblioEduca is a system designed to simplify the daily operations of a library. It helps streamline processes that were previously done manually, ensuring greater efficiency and security in managing library data.
+## Funcionalidades
+- Registro de livros
+- Devolução de livros (retorno à circulação)
+- Empréstimo de livros (para leitores)
+- Cadastro de usuários
+- Gerenciamento da lista de usuários
+- Gerenciamento da lista de livros
+- Registro de informações da biblioteca
+- Filtro por categorias e autores
 
-## Features
-- Book registration
-- Book check-in (from circulation)
-- Book check-out (by readers)
-- User registration
-- User list management
-- Book list management
-- Library information registration
-- Filtering by categories and authors
-
-## Technologies
+## Tecnologias
 - EJS
 - JavaScript
 - Node.js
 - Express.js
 - MySQL
+- Electon.js
 
-## Contribution
-BiblioEduca aims to simplify the daily activities of libraries by automating and accelerating previously manual tasks. The system ensures the security of user data, making library management more efficient.
+## Contribuição
+O BiblioControle tem como objetivo simplificar as atividades diárias das bibliotecas, automatizando e acelerando tarefas que antes eram manuais. O sistema garante a segurança dos dados dos usuários, tornando a gestão da biblioteca mais eficiente.
 
-## How to Use
-Using the system is simple. Library admins will have login credentials that grant them access to the system. They can register books, users, and manage library data. Admins will also have an easy-to-use search feature to quickly find books and facilitate the process of lending and checking records for library readers.
+## 📦 Instalação
+
+Para instalar o sistema, siga os passos abaixo:
+
+1. Instale a versão LTS do [Node.js](https://nodejs.org/).
+2. Instale um banco de dados [MySQL](https://www.mysql.com/).
+3. Crie um banco de dados com nome que está no banco de dados do arquivo .
+4. Instale as dependências necessárias:
+
+   ```
+   npm install sequelize
+   npm install mysql2
+   npm install express
+   npm install ejs
+   npm install electon
+
+## ⚙️ Uso
+
+Para utilizar o sistema, siga os passos abaixo:
+
+1. Navegue até a pasta onde você salvou os arquivos do OPN Finance.
+2. Execute o seguinte comando para iniciar o servidor:
+
+   ```
+   nodemon start
+
+## 💻 Contribuição e Desenvolvimento
+
+Contribuições são bem-vindas! Para contribuir com o projeto, siga os passos abaixo:
+
+1. Faça testes no seu ambiente local e explore as funcionalidades do sistema.
+2. Verifique quais melhorias e recursos podem ser acrescentados.
+3. Entre em contato conosco através dos nossos canais de atendimento para sugestões ou melhorias.
+
+## 📜 Licença e Direitos Autorais
+
+O sistema **OPN Finance** é de uso livre, mas **é ilegal vendê-lo sem a autorização dos criadores**.
+
+## 📧 Contato e Suporte
+
+Caso precise de mais informações ou tenha dúvidas, entre em contato conosco pelo e-mail:
+
+- 📧 E-MAIL: (evertnnsantts@gmail.com)
+
