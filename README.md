@@ -62,7 +62,7 @@ Contribuições são bem-vindas! Para contribuir com o projeto, siga os passos a
 
 ## 📜 Licença e Direitos Autorais
 
-O sistema **OPN Finance** é de uso livre, mas **é ilegal vendê-lo sem a autorização dos criadores**.
+O sistema **BiblioControle** é de uso livre, mas **é ilegal vendê-lo sem a autorização dos criadores**.
 
 ## 📧 Contato e Suporte
 
