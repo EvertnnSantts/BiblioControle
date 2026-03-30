@@ -1,0 +1,79 @@
+
+> bibliotecav@1.0.0 server
+> node server/src/index.js
+
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚡️ secrets for agents: https://dotenvx.com/as2
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+Executing (default): SELECT 1+1 AS result
+✅ Conexão com banco de dados estabelecida
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'admins' AND TABLE_SCHEMA = 'bibliotecav'
+Executing (default): SHOW FULL COLUMNS FROM `admins`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'admins' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='bibliotecav' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): ALTER TABLE `admins` CHANGE `email` `email` VARCHAR(255) NOT NULL UNIQUE;
+Executing (default): ALTER TABLE `admins` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+Executing (default): ALTER TABLE `admins` CHANGE `nome` `nome` VARCHAR(255);
+Executing (default): ALTER TABLE `admins` CHANGE `ativo` `ativo` TINYINT(1) DEFAULT true;
+Executing (default): ALTER TABLE `admins` CHANGE `ultimo_acesso` `ultimo_acesso` DATETIME;
+Executing (default): ALTER TABLE `admins` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `admins` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+Executing (default): SHOW INDEX FROM `admins`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'users' AND TABLE_SCHEMA = 'bibliotecav'
+Executing (default): SHOW FULL COLUMNS FROM `users`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='bibliotecav' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): ALTER TABLE `users` CHANGE `nome` `nome` VARCHAR(100) NOT NULL;
+Executing (default): ALTER TABLE `users` CHANGE `email` `email` VARCHAR(150) NOT NULL UNIQUE;
+Executing (default): ALTER TABLE `users` CHANGE `password` `password` VARCHAR(255) NOT NULL;
+Executing (default): ALTER TABLE `users` CHANGE `telefone` `telefone` VARCHAR(20) NOT NULL;
+Executing (default): ALTER TABLE `users` CHANGE `endereco` `endereco` VARCHAR(255) NOT NULL;
+Executing (default): ALTER TABLE `users` CHANGE `matricula` `matricula` VARCHAR(50) NOT NULL UNIQUE;
+Executing (default): ALTER TABLE `users` CHANGE `curso` `curso` VARCHAR(100) NOT NULL;
+Executing (default): ALTER TABLE `users` CHANGE `ativo` `ativo` TINYINT(1) DEFAULT true;
+Executing (default): ALTER TABLE `users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+Executing (default): SHOW INDEX FROM `users`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'books' AND TABLE_SCHEMA = 'bibliotecav'
+Executing (default): SHOW FULL COLUMNS FROM `books`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'books' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='bibliotecav' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): ALTER TABLE `books` CHANGE `titulo` `titulo` VARCHAR(255) NOT NULL;
+Executing (default): ALTER TABLE `books` CHANGE `autor` `autor` VARCHAR(255) NOT NULL;
+Executing (default): ALTER TABLE `books` CHANGE `quantidade` `quantidade` INTEGER NOT NULL DEFAULT 1;
+Executing (default): ALTER TABLE `books` CHANGE `estante` `estante` VARCHAR(50);
+Executing (default): ALTER TABLE `books` CHANGE `observacao` `observacao` TEXT;
+Executing (default): ALTER TABLE `books` CHANGE `situacao` `situacao` ENUM('disponivel', 'emprestimo', 'consulta', 'reservado') DEFAULT 'disponivel';
+Executing (default): ALTER TABLE `books` CHANGE `genero` `genero` VARCHAR(100) NOT NULL;
+Executing (default): ALTER TABLE `books` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `books` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+Executing (default): SHOW INDEX FROM `books`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'loans' AND TABLE_SCHEMA = 'bibliotecav'
+Executing (default): SHOW FULL COLUMNS FROM `loans`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'loans' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='bibliotecav' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): SELECT CONSTRAINT_CATALOG AS constraintCatalog, CONSTRAINT_NAME AS constraintName, CONSTRAINT_SCHEMA AS constraintSchema, CONSTRAINT_TYPE AS constraintType, TABLE_NAME AS tableName, TABLE_SCHEMA AS tableSchema from INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE table_name='loans' AND constraint_name = 'loans_ibfk_21' AND TABLE_SCHEMA = 'bibliotecav';
+Executing (default): ALTER TABLE `loans` DROP FOREIGN KEY `loans_ibfk_21`;
+Executing (default): ALTER TABLE `loans` ADD FOREIGN KEY (`book_id`) REFERENCES `books` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+Executing (default): SELECT CONSTRAINT_CATALOG AS constraintCatalog, CONSTRAINT_NAME AS constraintName, CONSTRAINT_SCHEMA AS constraintSchema, CONSTRAINT_TYPE AS constraintType, TABLE_NAME AS tableName, TABLE_SCHEMA AS tableSchema from INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE table_name='loans' AND constraint_name = 'loans_ibfk_22' AND TABLE_SCHEMA = 'bibliotecav';
+Executing (default): ALTER TABLE `loans` DROP FOREIGN KEY `loans_ibfk_22`;
+Executing (default): ALTER TABLE `loans` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+Executing (default): ALTER TABLE `loans` CHANGE `data_emprestimo` `data_emprestimo` DATE NOT NULL;
+Executing (default): ALTER TABLE `loans` CHANGE `data_devolucao` `data_devolucao` DATE;
+Executing (default): ALTER TABLE `loans` CHANGE `data_prevista` `data_prevista` DATE NOT NULL;
+Executing (default): ALTER TABLE `loans` CHANGE `status` `status` ENUM('ativo', 'devolvido', 'atrasado', 'bloqueado') DEFAULT 'ativo';
+Executing (default): ALTER TABLE `loans` CHANGE `observacao` `observacao` TEXT;
+Executing (default): ALTER TABLE `loans` CHANGE `turma` `turma` VARCHAR(50);
+Executing (default): ALTER TABLE `loans` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `loans` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+Executing (default): SHOW INDEX FROM `loans`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'blocked_users' AND TABLE_SCHEMA = 'bibliotecav'
+Executing (default): SHOW FULL COLUMNS FROM `blocked_users`;
+Executing (default): SELECT CONSTRAINT_NAME as constraint_name,CONSTRAINT_NAME as constraintName,CONSTRAINT_SCHEMA as constraintSchema,CONSTRAINT_SCHEMA as constraintCatalog,TABLE_NAME as tableName,TABLE_SCHEMA as tableSchema,TABLE_SCHEMA as tableCatalog,COLUMN_NAME as columnName,REFERENCED_TABLE_SCHEMA as referencedTableSchema,REFERENCED_TABLE_SCHEMA as referencedTableCatalog,REFERENCED_TABLE_NAME as referencedTableName,REFERENCED_COLUMN_NAME as referencedColumnName FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE where TABLE_NAME = 'blocked_users' AND CONSTRAINT_NAME!='PRIMARY' AND CONSTRAINT_SCHEMA='bibliotecav' AND REFERENCED_TABLE_NAME IS NOT NULL;
+Executing (default): ALTER TABLE `blocked_users` CHANGE `email` `email` VARCHAR(150) NOT NULL;
+Executing (default): ALTER TABLE `blocked_users` CHANGE `telefone` `telefone` VARCHAR(20) NOT NULL;
+Executing (default): ALTER TABLE `blocked_users` CHANGE `motivo` `motivo` TEXT;
+Executing (default): SELECT CONSTRAINT_CATALOG AS constraintCatalog, CONSTRAINT_NAME AS constraintName, CONSTRAINT_SCHEMA AS constraintSchema, CONSTRAINT_TYPE AS constraintType, TABLE_NAME AS tableName, TABLE_SCHEMA AS tableSchema from INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE table_name='blocked_users' AND constraint_name = 'blocked_users_ibfk_1' AND TABLE_SCHEMA = 'bibliotecav';
+Executing (default): ALTER TABLE `blocked_users` DROP FOREIGN KEY `blocked_users_ibfk_1`;
+Executing (default): ALTER TABLE `blocked_users` ADD FOREIGN KEY (`bloqueado_por`) REFERENCES `admins` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+Executing (default): ALTER TABLE `blocked_users` CHANGE `created_at` `created_at` DATETIME NOT NULL;
+Executing (default): ALTER TABLE `blocked_users` CHANGE `updated_at` `updated_at` DATETIME NOT NULL;
+Executing (default): SHOW INDEX FROM `blocked_users`
+✅ Modelos sincronizados com o banco
+✅ Servidor rodando em http://localhost:5000
+✅ API disponível em http://localhost:5000/api
