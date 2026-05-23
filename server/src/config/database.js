@@ -6,6 +6,7 @@
 // 5. sync({ alter: true }) removido de produção — migrações devem ser manuais via SQL
 
 const { Sequelize } = require('sequelize');
+const pg = require('pg');
 const path = require('path');
 
 // Carrega o .env da pasta /server independente de onde o node foi chamado
@@ -17,6 +18,7 @@ if (!process.env.DATABASE_URL) {
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: 'postgres',
+  dialectModule: pg,
   logging: process.env.NODE_ENV === 'development' ? console.log : false,
 
   // SSL obrigatório para Supabase (e a maioria dos Postgres gerenciados)
