@@ -72,7 +72,7 @@
     "has-proto": "^1.0.1",
     "has-symbols": "^1.0.3",
     "hasown": "^2.0.0",
-    "helmet": "^8.1.0",
+    "pg": "^8.13.0",
     "http-cache-semantics": "^4.1.1",
     "http-errors": "^2.0.0",
     "http2-wrapper": "^1.0.3",
@@ -92,7 +92,7 @@
     "lru-cache": "^6.0.0",
     "matcher": "^3.0.0",
     "media-typer": "^0.3.0",
-    "merge-descriptors": "^1.0.1",
+    "merge-descriptors": "^1.1.1",
     "methods": "^1.1.2",
     "mime": "^1.6.0",
     "mime-db": "^1.52.0",
@@ -150,7 +150,9 @@
     "vary": "^1.1.2",
     "wrappy": "^1.0.2",
     "yallist": "^4.0.0",
-    "yauzl": "^2.10.0"
+    "yauzl": "^2.10.0",
+    "pg": "^8.13.0",
+    "pg-hstore": "^2.3.4"
   },
   "devDependencies": {
     "electron": "^28.2.3",
