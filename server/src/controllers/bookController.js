@@ -130,10 +130,7 @@ const deleteBook = async (req, res, next) => {
     // Bloqueia exclusão apenas se houver empréstimos ATIVOS
     const totalEmprestimos = await Loan.count({ where: { bookId: id, status: 'ativo' } });
     if (totalEmprestimos > 0) {
-      return res.status(400).json({
-        success: false,
-        message: `Não é possível excluir. Este livro possui ${totalEmprestimos} empréstimo(s) ativo(s).`
-      });
+      return res.status(400).json({ success: false, message: `Não é possível excluir. Livro possui ${totalEmprestimos} empréstimo(s) ativo(s).` });
     }
 
     await book.destroy();

@@ -156,10 +156,7 @@ const deleteUser = async (req, res, next) => {
     // Bloqueia exclusão apenas se houver empréstimos ATIVOS
     const totalEmprestimos = await Loan.count({ where: { userId: id, status: 'ativo' } });
     if (totalEmprestimos > 0) {
-      return res.status(400).json({
-        success: false,
-        message: `Não é possível excluir. Este usuário possui ${totalEmprestimos} empréstimo(s) ativo(s).`
-      });
+      return res.status(400).json({ success: false, message: `Não é possível excluir. Usuário possui ${totalEmprestimos} empréstimo(s) ativo(s).` });
     }
 
     await user.destroy();
