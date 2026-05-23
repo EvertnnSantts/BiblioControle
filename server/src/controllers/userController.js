@@ -1,3 +1,7 @@
+// ALTERAÇÕES:
+// 1. Op.like → Op.iLike em todas as buscas (case-insensitive no PostgreSQL)
+// 2. Sem outras mudanças de lógica
+
 const { User, BlockedUser, Loan } = require('../models');
 const { Op } = require('sequelize');
 const { createUserSchema, updateUserSchema, blockUserSchema } = require('../utils/validations');
@@ -11,6 +15,7 @@ const getAllUsers = async (req, res, next) => {
 
     if (search) {
       where[Op.or] = [
+        // ALTERADO: Op.iLike (case-insensitive no PostgreSQL)
         { nome: { [Op.iLike]: `%${search}%` } },
         { email: { [Op.iLike]: `%${search}%` } },
         { matricula: { [Op.iLike]: `%${search}%` } }
@@ -52,6 +57,7 @@ const searchUsers = async (req, res, next) => {
         ativo: true,
         [Op.or]: [
           { id: parseInt(q) || 0 },
+          // ALTERADO: Op.iLike
           { nome: { [Op.iLike]: `%${q}%` } },
           { email: { [Op.iLike]: `%${q}%` } },
           { telefone: { [Op.iLike]: `%${q}%` } },
@@ -147,12 +153,12 @@ const deleteUser = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Usuário não encontrado' });
     }
 
-    // Verifica empréstimos vinculados antes de deletar
+    // Bloqueia exclusão apenas se houver empréstimos ATIVOS
     const totalEmprestimos = await Loan.count({ where: { userId: id, status: 'ativo' } });
     if (totalEmprestimos > 0) {
       return res.status(400).json({
         success: false,
-        message: `Não é possível excluir. Este usuário possui ${totalEmprestimos} empréstimo(s) registrado(s) no histórico.`
+        message: `Não é possível excluir. Este usuário possui ${totalEmprestimos} empréstimo(s) ativo(s).`
       });
     }
 
