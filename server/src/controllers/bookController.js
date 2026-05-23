@@ -1,4 +1,4 @@
-// ALTERAÇÕES:
+﻿// ALTERAÇÕES:
 // 1. Op.like → Op.iLike em todas as buscas de texto
 //    Motivo: MySQL faz LIKE case-insensitive por padrão; PostgreSQL não.
 //    Op.iLike usa ILIKE do Postgres, equivalente ao comportamento anterior.

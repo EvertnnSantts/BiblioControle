@@ -1,4 +1,4 @@
-// ALTERAÇÕES:
+﻿// ALTERAÇÕES:
 // 1. Op.like → Op.iLike em todas as buscas (case-insensitive no PostgreSQL)
 // 2. Sem outras mudanças de lógica
 
