@@ -148,7 +148,7 @@ const deleteUser = async (req, res, next) => {
     }
 
     // Verifica empréstimos vinculados antes de deletar
-    const totalEmprestimos = await Loan.count({ where: { userId: id } });
+    const totalEmprestimos = await Loan.count({ where: { userId: id, status: 'ativo' } });
     if (totalEmprestimos > 0) {
       return res.status(400).json({
         success: false,

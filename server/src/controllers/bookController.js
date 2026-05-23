@@ -122,7 +122,7 @@ const deleteBook = async (req, res, next) => {
     }
 
     // Verifica empréstimos vinculados antes de deletar
-    const totalEmprestimos = await Loan.count({ where: { bookId: id } });
+    const totalEmprestimos = await Loan.count({ where: { bookId: id, status: 'ativo' } });
     if (totalEmprestimos > 0) {
       return res.status(400).json({
         success: false,
