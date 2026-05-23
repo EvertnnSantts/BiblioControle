@@ -1,8 +1,3 @@
-// ALTERAÇÕES:
-// 1. Op.like → Op.iLike em todas as buscas de texto
-//    Motivo: MySQL faz LIKE case-insensitive por padrão; PostgreSQL não.
-//    Op.iLike usa ILIKE do Postgres, equivalente ao comportamento anterior.
-
 const { Book, Loan, sequelize } = require('../models');
 const { Op } = require('sequelize');
 const { createBookSchema, updateBookSchema } = require('../utils/validations');
@@ -16,7 +11,6 @@ const getAllBooks = async (req, res, next) => {
 
     if (search) {
       where[Op.or] = [
-        // ALTERADO: Op.like → Op.iLike (case-insensitive no PostgreSQL)
         { titulo: { [Op.iLike]: `%${search}%` } },
         { autor: { [Op.iLike]: `%${search}%` } }
       ];
@@ -121,10 +115,21 @@ const updateBook = async (req, res, next) => {
 const deleteBook = async (req, res, next) => {
   try {
     const { id } = req.params;
+
     const book = await Book.findByPk(id);
     if (!book) {
       return res.status(404).json({ success: false, message: 'Livro não encontrado' });
     }
+
+    // Verifica empréstimos vinculados antes de deletar
+    const totalEmprestimos = await Loan.count({ where: { bookId: id } });
+    if (totalEmprestimos > 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Não é possível excluir. Este livro possui ${totalEmprestimos} empréstimo(s) registrado(s) no histórico.`
+      });
+    }
+
     await book.destroy();
     res.json({ success: true, message: 'Livro deletado com sucesso' });
   } catch (error) {
