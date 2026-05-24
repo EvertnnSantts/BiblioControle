@@ -6,7 +6,8 @@ import {
   Library, 
   ArrowRightLeft,
   Settings,
-  Clock
+  Clock,
+  ClipboardList
 } from 'lucide-react';
 
 const navItems = [
@@ -15,6 +16,7 @@ const navItems = [
   { to: '/users', icon: Users, label: 'Usuários' },
   { to: '/loans', icon: ArrowRightLeft, label: 'Empréstimos' },
   { to: '/local-consultations', icon: Clock, label: 'Consulta Local' },
+  { to: '/attendance', icon: ClipboardList, label: 'Presença' },
   { to: '/library', icon: Library, label: 'Biblioteca' },
 ];
 

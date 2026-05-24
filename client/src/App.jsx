@@ -8,6 +8,7 @@ import Books from './pages/Books';
 import Users from './pages/Users';
 import Loans from './pages/Loans';
 import LocalConsultations from './pages/LocalConsultations';
+import Attendance from './pages/Attendance';
 import Library from './pages/Library';
 
 // Protected Route Component
@@ -70,6 +71,7 @@ function AppRoutes() {
         <Route path="users" element={<Users />} />
         <Route path="loans" element={<Loans />} />
         <Route path="local-consultations" element={<LocalConsultations />} />
+        <Route path="attendance" element={<Attendance />} />
         <Route path="library" element={<Library />} />
       </Route>
 

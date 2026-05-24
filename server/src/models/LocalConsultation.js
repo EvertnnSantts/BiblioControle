@@ -36,13 +36,13 @@ const LocalConsultation = sequelize.define('LocalConsultation', {
     type: DataTypes.DATE,
     allowNull: true
   },
-  duracaoHoras: {
+  duracaoMinutos: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: 4,
+    defaultValue: 240, // 4 horas
     validate: {
       min: 1,
-      max: 24
+      max: 1440 // 24 horas
     }
   },
   status: {

@@ -24,7 +24,7 @@ const LocalConsultations = () => {
   const [formData, setFormData] = useState({
     bookId: '',
     userId: '',
-    duracaoHoras: 4,
+    duracaoTempo: '04:00',
     turma: ''
   });
 
@@ -127,7 +127,7 @@ const LocalConsultations = () => {
     setFormData({
       bookId: '',
       userId: '',
-      duracaoHoras: 4,
+      duracaoTempo: '04:00',
       turma: ''
     });
     setSelectedUser(null);
@@ -297,12 +297,10 @@ const LocalConsultations = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
-              label="Duração (horas)"
-              type="number"
-              min="1"
-              max="24"
-              value={formData.duracaoHoras}
-              onChange={(e) => setFormData({ ...formData, duracaoHoras: parseInt(e.target.value) })}
+              label="Duração (HH:MM)"
+              type="time"
+              value={formData.duracaoTempo}
+              onChange={(e) => setFormData({ ...formData, duracaoTempo: e.target.value })}
               required
             />
             <div>

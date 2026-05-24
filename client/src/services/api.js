@@ -81,4 +81,15 @@ export const localConsultationService = {
   getStats: () => api.get('/local-consultations/stats')
 };
 
+// Attendance
+export const attendanceService = {
+  createList: (data) => api.post('/attendance/lists', data),
+  getLists: (params) => api.get('/attendance/lists', { params }),
+  getListById: (id) => api.get(`/attendance/lists/${id}`),
+  deleteList: (id) => api.delete(`/attendance/lists/${id}`),
+  registerEntry: (data) => api.post('/attendance/records/entry', data),
+  registerExit: (id, data) => api.post(`/attendance/records/${id}/exit`, data),
+  adminRegisterExit: (id) => api.post(`/attendance/records/${id}/admin-exit`)
+};
+
 export default api;

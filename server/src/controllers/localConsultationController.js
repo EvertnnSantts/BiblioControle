@@ -99,7 +99,7 @@ const createConsulta = async (req, res, next) => {
       return res.status(400).json({ success: false, message: error.details[0].message });
     }
 
-    const { bookId, userId, duracaoHoras, turma, observacao } = value;
+    const { bookId, userId, duracaoTempo, turma, observacao } = value;
 
     // Verificar livro
     const book = await Book.findByPk(bookId);
@@ -150,11 +150,20 @@ const createConsulta = async (req, res, next) => {
       return res.status(403).json({ success: false, message: 'Usuário está bloqueado' });
     }
 
-    // Regra: usuário só pode ter 1 consulta local ativa
+    // Regra: usuário só pode ter 1 consulta local ativa (em_consulta ou vencida)
     const consultaAtivaUsuario = await LocalConsultation.findOne({
-      where: { userId, status: 'em_consulta' }
+      where: { 
+        userId, 
+        status: { [Op.in]: ['em_consulta', 'vencida'] } 
+      }
     });
     if (consultaAtivaUsuario) {
+      if (consultaAtivaUsuario.status === 'vencida') {
+        return res.status(400).json({
+          success: false,
+          message: 'O usuário possui uma consulta local vencida e está temporariamente bloqueado. Devolva o livro para liberar o sistema.'
+        });
+      }
       return res.status(400).json({
         success: false,
         message: 'O usuário já possui uma consulta local ativa.'
@@ -172,15 +181,18 @@ const createConsulta = async (req, res, next) => {
       });
     }
 
+    const [horasStr, minutosStr] = duracaoTempo.split(':');
+    const duracaoMinutos = parseInt(horasStr, 10) * 60 + parseInt(minutosStr, 10);
+
     const agora = new Date();
-    const dataExpiracao = new Date(agora.getTime() + duracaoHoras * 60 * 60 * 1000);
+    const dataExpiracao = new Date(agora.getTime() + duracaoMinutos * 60 * 1000);
 
     const consulta = await LocalConsultation.create({
       bookId,
       userId,
       dataRetirada: agora,
       dataExpiracao,
-      duracaoHoras,
+      duracaoMinutos,
       turma: user.turma || turma,
       observacao,
       status: 'em_consulta'

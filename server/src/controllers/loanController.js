@@ -166,11 +166,20 @@ const createLoan = async (req, res, next) => {
       });
     }
 
-    // Verificar se usuário tem consulta local ativa
+    // Verificar se usuário tem consulta local ativa ou vencida
     const consultaAtivaUsuario = await LocalConsultation.findOne({
-      where: { userId, status: 'em_consulta' }
+      where: { 
+        userId, 
+        status: { [Op.in]: ['em_consulta', 'vencida'] } 
+      }
     });
     if (consultaAtivaUsuario) {
+      if (consultaAtivaUsuario.status === 'vencida') {
+        return res.status(400).json({
+          success: false,
+          message: 'Este usuário possui uma consulta local vencida e está temporariamente bloqueado.'
+        });
+      }
       return res.status(400).json({
         success: false,
         message: 'Este usuário já possui uma consulta local ativa. Não é possível realizar o empréstimo.'

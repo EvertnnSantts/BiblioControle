@@ -154,9 +154,9 @@ const createLocalConsultationSchema = Joi.object({
     'number.positive': 'ID do usuário deve ser positivo',
     'any.required': 'ID do usuário é obrigatório'
   }),
-  duracaoHoras: Joi.number().integer().min(1).max(24).default(4).messages({
-    'number.min': 'A duração mínima é de 1 hora',
-    'number.max': 'A duração máxima é de 24 horas'
+  duracaoTempo: Joi.string().pattern(/^([01]\d|2[0-3]):([0-5]\d)$/).required().messages({
+    'string.pattern.base': 'A duração deve estar no formato HH:MM',
+    'any.required': 'A duração é obrigatória'
   }),
   turma: Joi.string().max(50).optional(),
   observacao: Joi.string().max(500).optional()

@@ -90,12 +90,15 @@ const Loans = () => {
       setUserHasActiveLoan(false);
     }
     
-    // Verificar se o usuário tem consulta local ativa
+    // Verificar se o usuário tem consulta local ativa ou vencida
     try {
-      // Usa o service que exportamos do api.js
       const { localConsultationService } = await import('../services/api');
-      const consultaRes = await localConsultationService.getAll({ userId: user.id, status: 'em_consulta' });
-      setUserHasActiveConsultation(consultaRes.data.data.consultas.length > 0);
+      // Busca em_consulta
+      const consultaResAtiva = await localConsultationService.getAll({ userId: user.id, status: 'em_consulta' });
+      // Busca vencida
+      const consultaResVencida = await localConsultationService.getAll({ userId: user.id, status: 'vencida' });
+      
+      setUserHasActiveConsultation(consultaResAtiva.data.data.consultas.length > 0 || consultaResVencida.data.data.consultas.length > 0);
     } catch {
       setUserHasActiveConsultation(false);
     }
@@ -355,16 +358,16 @@ const Loans = () => {
             </div>
           )}
 
-          {/* Aviso: usuário já possui consulta local ativa */}
+          {/* Aviso: usuário já possui consulta local ativa ou vencida */}
           {selectedUser && userHasActiveConsultation && (
             <div className="flex items-start gap-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
               <Ban className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-semibold text-blue-800">
-                  Usuário já possui uma consulta local ativa
+                  Usuário bloqueado por Consulta Local
                 </p>
                 <p className="text-xs text-blue-700 mt-0.5">
-                  Não é possível realizar um empréstimo enquanto o usuário estiver em consulta local.
+                  O usuário possui uma consulta local ativa ou vencida. É necessário devolver o livro da consulta antes de realizar novos empréstimos.
                 </p>
               </div>
             </div>
