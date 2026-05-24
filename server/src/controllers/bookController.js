@@ -3,7 +3,7 @@
 //    Motivo: MySQL faz LIKE case-insensitive por padrão; PostgreSQL não.
 //    Op.iLike usa ILIKE do Postgres, equivalente ao comportamento anterior.
 
-const { Book, Loan, sequelize } = require('../models');
+const { Book, Loan, LocalConsultation, sequelize } = require('../models');
 const { Op } = require('sequelize');
 const { createBookSchema, updateBookSchema } = require('../utils/validations');
 
@@ -37,13 +37,17 @@ const getAllBooks = async (req, res, next) => {
       const emprestimosAtivos = await Loan.count({
         where: { bookId: book.id, status: 'ativo' }
       });
+      const consultaAtiva = await LocalConsultation.findOne({
+        where: { bookId: book.id, status: 'em_consulta' }
+      });
       const disponivel = Math.max(0, book.quantidade - emprestimosAtivos);
       const consultaLocal = book.situacao === 'consulta';
       return { 
         ...book.toJSON(), 
         quantidadeDisponivel: consultaLocal ? book.quantidade : disponivel,
         emprestimosAtivos,
-        consultaLocal
+        consultaLocal,
+        consultaAtiva: !!consultaAtiva
       };
     }));
 
@@ -142,11 +146,28 @@ const deleteBook = async (req, res, next) => {
       });
     }
 
+    // Bloqueia exclusão se houver consulta local ATIVA
+    const consultasAtivas = await LocalConsultation.count({ where: { bookId: id, status: 'em_consulta' } });
+    if (consultasAtivas > 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Não é possível excluir. Este livro está sendo consultado no momento. Finalize a consulta local antes de excluir.'
+      });
+    }
+
     // Deletar TODOS os empréstimos não-ativos (devolvido, atrasado, bloqueado) para liberar a FK
     await Loan.destroy({
       where: {
         bookId: id,
         status: { [Op.in]: ['devolvido', 'atrasado', 'bloqueado'] }
+      }
+    });
+
+    // Deletar TODAS as consultas locais finalizadas (devolvida, vencida) para liberar a FK
+    await LocalConsultation.destroy({
+      where: {
+        bookId: id,
+        status: { [Op.in]: ['devolvida', 'vencida'] }
       }
     });
 

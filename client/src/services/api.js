@@ -72,4 +72,13 @@ export const loanService = {
   getTurmas: () => api.get('/loans/turmas')
 };
 
+// Local Consultations
+export const localConsultationService = {
+  getAll: (params) => api.get('/local-consultations', { params }),
+  getActive: () => api.get('/local-consultations/active'),
+  create: (data) => api.post('/local-consultations', data),
+  return: (id, data) => api.post(`/local-consultations/${id}/return`, data),
+  getStats: () => api.get('/local-consultations/stats')
+};
+
 export default api;

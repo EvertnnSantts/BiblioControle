@@ -17,6 +17,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const bookRoutes = require('./routes/books');
 const loanRoutes = require('./routes/loans');
+const localConsultationRoutes = require('./routes/localConsultations');
 
 // Validação de segredos obrigatórios
 if (!process.env.JWT_SECRET) {
@@ -67,6 +68,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/books', bookRoutes);
 app.use('/api/loans', loanRoutes);
+app.use('/api/local-consultations', localConsultationRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ success: true, message: 'API BiblioControle funcionando!', env: process.env.NODE_ENV });

@@ -4,6 +4,7 @@ const User = require('./User');
 const Book = require('./Book');
 const Loan = require('./Loan');
 const BlockedUser = require('./BlockedUser');
+const LocalConsultation = require('./LocalConsultation');
 
 // Definir associações
 Book.hasMany(Loan, { foreignKey: 'bookId', as: 'loans' });
@@ -11,6 +12,12 @@ Loan.belongsTo(Book, { foreignKey: 'bookId', as: 'book' });
 
 User.hasMany(Loan, { foreignKey: 'userId', as: 'loans' });
 Loan.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+
+Book.hasMany(LocalConsultation, { foreignKey: 'bookId', as: 'consultas' });
+LocalConsultation.belongsTo(Book, { foreignKey: 'bookId', as: 'book' });
+
+User.hasMany(LocalConsultation, { foreignKey: 'userId', as: 'consultas' });
+LocalConsultation.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
 Admin.hasMany(BlockedUser, { foreignKey: 'bloqueadoPor', as: 'bloqueios' });
 BlockedUser.belongsTo(Admin, { foreignKey: 'bloqueadoPor', as: 'admin' });
@@ -21,5 +28,6 @@ module.exports = {
   User,
   Book,
   Loan,
-  BlockedUser
+  BlockedUser,
+  LocalConsultation
 };

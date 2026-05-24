@@ -1,4 +1,4 @@
-const { Loan, Book, User, BlockedUser, sequelize } = require('../models');
+const { Loan, Book, User, BlockedUser, LocalConsultation, sequelize } = require('../models');
 const { createLoanSchema, returnLoanSchema } = require('../utils/validations');
 const { Op } = require('sequelize');
 
@@ -115,6 +115,17 @@ const createLoan = async (req, res, next) => {
       });
     }
 
+    // Verificar se o livro está em consulta local ativa
+    const consultaAtivaLivro = await LocalConsultation.findOne({
+      where: { bookId, status: 'em_consulta' }
+    });
+    if (consultaAtivaLivro) {
+      return res.status(400).json({
+        success: false,
+        message: 'Este livro está em consulta local no momento. Aguarde a devolução.'
+      });
+    }
+
     // Verificar disponibilidade baseada na quantidade
     const emprestimosAtivos = await Loan.count({
       where: { bookId, status: 'ativo' }
@@ -152,6 +163,17 @@ const createLoan = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         message: 'Este usuário já possui um empréstimo ativo. Cada usuário pode ter no máximo 1 livro emprestado por vez.'
+      });
+    }
+
+    // Verificar se usuário tem consulta local ativa
+    const consultaAtivaUsuario = await LocalConsultation.findOne({
+      where: { userId, status: 'em_consulta' }
+    });
+    if (consultaAtivaUsuario) {
+      return res.status(400).json({
+        success: false,
+        message: 'Este usuário já possui uma consulta local ativa. Não é possível realizar o empréstimo.'
       });
     }
 

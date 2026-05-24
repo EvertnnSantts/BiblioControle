@@ -18,6 +18,7 @@ const Loans = () => {
   const [books, setBooks] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [userHasActiveLoan, setUserHasActiveLoan] = useState(false);
+  const [userHasActiveConsultation, setUserHasActiveConsultation] = useState(false);
   const [userSearch, setUserSearch] = useState('');
   const [userResults, setUserResults] = useState([]);
   const [searchingUsers, setSearchingUsers] = useState(false);
@@ -88,6 +89,16 @@ const Loans = () => {
     } catch {
       setUserHasActiveLoan(false);
     }
+    
+    // Verificar se o usuário tem consulta local ativa
+    try {
+      // Usa o service que exportamos do api.js
+      const { localConsultationService } = await import('../services/api');
+      const consultaRes = await localConsultationService.getAll({ userId: user.id, status: 'em_consulta' });
+      setUserHasActiveConsultation(consultaRes.data.data.consultas.length > 0);
+    } catch {
+      setUserHasActiveConsultation(false);
+    }
   };
 
 
@@ -102,6 +113,7 @@ const Loans = () => {
       setUserSearch('');
       setUserResults([]);
       setUserHasActiveLoan(false);
+      setUserHasActiveConsultation(false);
     }
   }, [modalOpen]);
 
@@ -158,6 +170,7 @@ const Loans = () => {
     setSelectedUser(null);
     setUserSearch('');
     setUserHasActiveLoan(false);
+    setUserHasActiveConsultation(false);
   };
 
   const statusOptions = [
@@ -290,6 +303,7 @@ const Loans = () => {
                   setSelectedUser(null);
                   setFormData({ ...formData, userId: '' });
                   setUserHasActiveLoan(false);
+                  setUserHasActiveConsultation(false);
                   searchUsers(e.target.value);
                 }}
                 icon={Search}
@@ -336,6 +350,21 @@ const Loans = () => {
                 </p>
                 <p className="text-xs text-orange-700 mt-0.5">
                   Cada usuário pode ter no máximo 1 livro emprestado por vez. Devolva o livro atual antes de realizar um novo empréstimo.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Aviso: usuário já possui consulta local ativa */}
+          {selectedUser && userHasActiveConsultation && (
+            <div className="flex items-start gap-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <Ban className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-semibold text-blue-800">
+                  Usuário já possui uma consulta local ativa
+                </p>
+                <p className="text-xs text-blue-700 mt-0.5">
+                  Não é possível realizar um empréstimo enquanto o usuário estiver em consulta local.
                 </p>
               </div>
             </div>
@@ -389,8 +418,8 @@ const Loans = () => {
             </Button>
             <Button 
               type="submit" 
-              disabled={!formData.userId || !formData.bookId || userHasActiveLoan}
-              title={userHasActiveLoan ? 'Usuário já possui empréstimo ativo' : ''}
+              disabled={!formData.userId || !formData.bookId || userHasActiveLoan || userHasActiveConsultation}
+              title={userHasActiveLoan ? 'Usuário já possui empréstimo ativo' : userHasActiveConsultation ? 'Usuário já possui consulta local ativa' : ''}
             >
               Criar Empréstimo
             </Button>

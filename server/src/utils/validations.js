@@ -144,6 +144,24 @@ const blockUserSchema = Joi.object({
   })
 });
 
+// Schema para consulta local
+const createLocalConsultationSchema = Joi.object({
+  bookId: Joi.number().integer().positive().required().messages({
+    'number.positive': 'ID do livro deve ser positivo',
+    'any.required': 'ID do livro é obrigatório'
+  }),
+  userId: Joi.number().integer().positive().required().messages({
+    'number.positive': 'ID do usuário deve ser positivo',
+    'any.required': 'ID do usuário é obrigatório'
+  }),
+  duracaoHoras: Joi.number().integer().min(1).max(24).default(4).messages({
+    'number.min': 'A duração mínima é de 1 hora',
+    'number.max': 'A duração máxima é de 24 horas'
+  }),
+  turma: Joi.string().max(50).optional(),
+  observacao: Joi.string().max(500).optional()
+});
+
 module.exports = {
   loginSchema,
   createAdminSchema,
@@ -153,5 +171,6 @@ module.exports = {
   updateBookSchema,
   createLoanSchema,
   returnLoanSchema,
-  blockUserSchema
+  blockUserSchema,
+  createLocalConsultationSchema
 };

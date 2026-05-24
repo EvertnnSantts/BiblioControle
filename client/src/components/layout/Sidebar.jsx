@@ -5,7 +5,8 @@ import {
   Users, 
   Library, 
   ArrowRightLeft,
-  Settings
+  Settings,
+  Clock
 } from 'lucide-react';
 
 const navItems = [
@@ -13,6 +14,7 @@ const navItems = [
   { to: '/books', icon: BookOpen, label: 'Livros' },
   { to: '/users', icon: Users, label: 'Usuários' },
   { to: '/loans', icon: ArrowRightLeft, label: 'Empréstimos' },
+  { to: '/local-consultations', icon: Clock, label: 'Consulta Local' },
   { to: '/library', icon: Library, label: 'Biblioteca' },
 ];
 
