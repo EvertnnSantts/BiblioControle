@@ -5,12 +5,12 @@ const Admin = require('./src/models/Admin');
 async function seed() {
   await sequelize.authenticate();
 
-  await Admin.destroy({ where: { email: 'Biblio@biblicontrole.com' } });
+  await Admin.destroy({ where: { email: 'Assistente@biblicontrole.com' } });
 
   const admin = await Admin.create({
-    email: 'Biblio@biblicontrole.com',
-    password: '82937061',
-    nome: 'Administrador',
+    email: 'Assistente@biblicontrole.com',
+    password: '45897010',
+    nome: 'Assistente',
     ativo: true
   });
 
