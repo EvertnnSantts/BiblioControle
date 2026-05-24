@@ -88,7 +88,14 @@ const Book = sequelize.define('Book', {
 });
 
 Book.prototype.isDisponivel = function () {
-  return this.situacao === 'disponivel' && this.quantidadeDisponivel > 0;
+  // Livros de consulta local são "disponíveis" para visualização, mas não podem ser emprestados
+  // Livros reservados (todos exemplares emprestados) não estão disponíveis
+  if (this.situacao === 'reservado') return false;
+  return this.quantidadeDisponivel > 0;
+};
+
+Book.prototype.isConsultaLocal = function () {
+  return this.situacao === 'consulta';
 };
 
 Book.prototype.calcularDisponivel = async function () {

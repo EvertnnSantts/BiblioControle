@@ -1,4 +1,4 @@
-﻿// ALTERAÇÕES:
+// ALTERAÇÕES:
 // 1. Op.like → Op.iLike em todas as buscas (case-insensitive no PostgreSQL)
 // 2. Sem outras mudanças de lógica
 
@@ -154,13 +154,24 @@ const deleteUser = async (req, res, next) => {
     }
 
     // Bloqueia exclusão apenas se houver empréstimos ATIVOS
-    const totalEmprestimos = await Loan.count({ where: { userId: id, status: 'ativo' } });
-    if (totalEmprestimos > 0) {
-      return res.status(400).json({ success: false, message: `Não é possível excluir. Usuário possui ${totalEmprestimos} empréstimo(s) ativo(s).` });
+    const emprestimosAtivos = await Loan.count({ where: { userId: id, status: 'ativo' } });
+    if (emprestimosAtivos > 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Não é possível excluir. Este usuário possui ${emprestimosAtivos} empréstimo(s) ativo(s). Devolva o(s) livro(s) antes de excluir.`
+      });
     }
 
+    // Deletar TODOS os empréstimos não-ativos (devolvido, atrasado, bloqueado) para liberar a FK
+    await Loan.destroy({
+      where: {
+        userId: id,
+        status: { [Op.in]: ['devolvido', 'atrasado', 'bloqueado'] }
+      }
+    });
+
     await user.destroy();
-    res.json({ success: true, message: 'Usuário deletado com sucesso' });
+    res.json({ success: true, message: 'Usuário excluído com sucesso' });
   } catch (error) {
     next(error);
   }

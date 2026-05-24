@@ -17,6 +17,7 @@ const Loans = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [books, setBooks] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [userHasActiveLoan, setUserHasActiveLoan] = useState(false);
   const [userSearch, setUserSearch] = useState('');
   const [userResults, setUserResults] = useState([]);
   const [searchingUsers, setSearchingUsers] = useState(false);
@@ -26,6 +27,7 @@ const Loans = () => {
     dataPrevista: '',
     turma: ''
   });
+
 
   const fetchLoans = async () => {
     try {
@@ -42,8 +44,10 @@ const Loans = () => {
   const fetchBooks = async () => {
     try {
       const booksRes = await bookService.getAll({ limit: 100 });
-      // Mostrar todos os livros com quantidade disponível > 0
+      // Incluir livros de consulta local na lista (para mostrá-los com aviso)
+      // Apenas excluir livros sem exemplares e totalmente reservados
       const availableBooks = booksRes.data.data.books.filter(b => {
+        if (b.consultaLocal) return false; // Consulta local nunca aparece para empréstimo
         const disponivel = b.quantidadeDisponivel || (b.quantidade - (b.emprestimosAtivos || 0));
         return disponivel > 0;
       });
@@ -72,12 +76,20 @@ const Loans = () => {
   };
 
   // Selecionar usuário da lista
-  const handleSelectUser = (user) => {
+  const handleSelectUser = async (user) => {
     setSelectedUser(user);
     setFormData({ ...formData, userId: user.id });
     setUserSearch(`${user.nome} (${user.matricula})`);
     setUserResults([]);
+    // Verificar se o usuário já tem empréstimo ativo
+    try {
+      const loansRes = await loanService.getAll({ userId: user.id, status: 'ativo' });
+      setUserHasActiveLoan(loansRes.data.data.loans.length > 0);
+    } catch {
+      setUserHasActiveLoan(false);
+    }
   };
+
 
   useEffect(() => {
     fetchLoans();
@@ -89,8 +101,10 @@ const Loans = () => {
       setSelectedUser(null);
       setUserSearch('');
       setUserResults([]);
+      setUserHasActiveLoan(false);
     }
   }, [modalOpen]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -143,6 +157,7 @@ const Loans = () => {
     });
     setSelectedUser(null);
     setUserSearch('');
+    setUserHasActiveLoan(false);
   };
 
   const statusOptions = [
@@ -274,6 +289,7 @@ const Loans = () => {
                   setUserSearch(e.target.value);
                   setSelectedUser(null);
                   setFormData({ ...formData, userId: '' });
+                  setUserHasActiveLoan(false);
                   searchUsers(e.target.value);
                 }}
                 icon={Search}
@@ -309,6 +325,21 @@ const Loans = () => {
               </div>
             )}
           </div>
+
+          {/* Aviso: usuário já possui empréstimo ativo */}
+          {selectedUser && userHasActiveLoan && (
+            <div className="flex items-start gap-3 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+              <Ban className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-semibold text-orange-800">
+                  Usuário já possui um empréstimo ativo
+                </p>
+                <p className="text-xs text-orange-700 mt-0.5">
+                  Cada usuário pode ter no máximo 1 livro emprestado por vez. Devolva o livro atual antes de realizar um novo empréstimo.
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Campo de livro com quantidade disponível */}
           <div>
@@ -356,7 +387,11 @@ const Loans = () => {
             <Button type="button" variant="secondary" onClick={() => setModalOpen(false)}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={!formData.userId || !formData.bookId}>
+            <Button 
+              type="submit" 
+              disabled={!formData.userId || !formData.bookId || userHasActiveLoan}
+              title={userHasActiveLoan ? 'Usuário já possui empréstimo ativo' : ''}
+            >
               Criar Empréstimo
             </Button>
           </div>

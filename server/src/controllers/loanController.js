@@ -107,6 +107,14 @@ const createLoan = async (req, res, next) => {
       });
     }
 
+    // Bloquear empréstimo de livros de consulta local
+    if (book.situacao === 'consulta') {
+      return res.status(400).json({
+        success: false,
+        message: 'Este livro é apenas para consulta local. Não pode ser emprestado nem sair da biblioteca.'
+      });
+    }
+
     // Verificar disponibilidade baseada na quantidade
     const emprestimosAtivos = await Loan.count({
       where: { bookId, status: 'ativo' }
@@ -133,6 +141,17 @@ const createLoan = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         message: 'Usuário está inativo'
+      });
+    }
+
+    // Verificar limite de 1 empréstimo ativo por usuário
+    const emprestimosAtivoUsuario = await Loan.count({
+      where: { userId, status: 'ativo' }
+    });
+    if (emprestimosAtivoUsuario >= 1) {
+      return res.status(400).json({
+        success: false,
+        message: 'Este usuário já possui um empréstimo ativo. Cada usuário pode ter no máximo 1 livro emprestado por vez.'
       });
     }
 

@@ -52,8 +52,7 @@ const errorHandler = (err, req, res, next) => {
   if (err.name === 'SequelizeForeignKeyConstraintError') {
     return res.status(400).json({
       success: false,
-      message: 'Referência inválida',
-      errors: [{ message: 'Registro relacionado não encontrado' }]
+      message: 'Não é possível excluir. Existem registros vinculados a este item. Verifique empréstimos pendentes.'
     });
   }
 

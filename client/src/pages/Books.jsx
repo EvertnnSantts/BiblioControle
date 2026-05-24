@@ -129,31 +129,42 @@ const Books = () => {
     { header: 'Autor', accessor: 'autor' },
     { header: 'Total', accessor: 'quantidade', width: '70px' },
     { header: 'Disp.', accessor: 'quantidadeDisponivel', width: '70px', render: (row) => (
-      <span className={`font-medium ${row.quantidadeDisponivel > 0 ? 'text-green-600' : 'text-red-600'}`}>
-        {row.quantidadeDisponivel ?? row.quantidade}
-      </span>
+      row.consultaLocal ? (
+        <span className="text-xs font-medium text-orange-600" title="Consulta local - não é emprestado">
+          Consulta
+        </span>
+      ) : (
+        <span className={`font-medium ${row.quantidadeDisponivel > 0 ? 'text-green-600' : 'text-red-600'}`}>
+          {row.quantidadeDisponivel ?? row.quantidade}
+        </span>
+      )
     )},
     { header: 'Gênero', accessor: 'genero' },
     { header: 'Situação', accessor: 'situacao', render: (row) => (
       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+        row.consultaLocal ? 'bg-orange-100 text-orange-800' :
         row.situacao === 'disponivel' ? 'bg-green-100 text-green-800' :
-        row.situacao === 'reservado' ? 'bg-orange-100 text-orange-800' :
+        row.situacao === 'reservado' ? 'bg-red-100 text-red-800' :
         'bg-gray-100 text-gray-800'
       }`}>
-        {row.situacao}
+        {row.consultaLocal ? '\uD83D\uDCDA Consulta Local' :
+         row.situacao === 'disponivel' ? 'Disponível' :
+         row.situacao === 'reservado' ? 'Emprestado' :
+         row.situacao}
       </span>
     )},
     { header: 'Ações', width: '100px', render: (row) => (
       <div className="flex gap-2">
-        <button onClick={() => handleEdit(row)} className="p-1 text-blue-600 hover:bg-blue-50 rounded">
+        <button onClick={() => handleEdit(row)} className="p-1 text-blue-600 hover:bg-blue-50 rounded" title="Editar">
           <Edit2 className="w-4 h-4" />
         </button>
-        <button onClick={() => handleDelete(row.id)} className="p-1 text-red-600 hover:bg-red-50 rounded">
+        <button onClick={() => handleDelete(row.id)} className="p-1 text-red-600 hover:bg-red-50 rounded" title="Excluir">
           <Trash2 className="w-4 h-4" />
         </button>
       </div>
     )}
   ];
+
 
   return (
     <div>
