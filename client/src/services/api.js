@@ -24,7 +24,9 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       sessionStorage.removeItem('token');
-      window.location.href = '/login';
+      // Redirecionar para o login correto conforme a rota atual
+      const isStudentRoute = window.location.pathname.startsWith('/aluno');
+      window.location.href = isStudentRoute ? '/aluno/login' : '/login';
     }
     return Promise.reject(error);
   }

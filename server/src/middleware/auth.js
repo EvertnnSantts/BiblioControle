@@ -21,16 +21,20 @@ const authenticate = async (req, res, next) => {
     if (decoded.role === 'student') {
       const { User } = require('../models');
       const user = await User.findByPk(decoded.id);
-      if (!user || !user.ativo) {
-        return res.status(401).json({ success: false, message: 'Usuário não encontrado ou inativo' });
+      // Alunos bloqueados (ativo=false) ainda podem acessar o portal para ver o status,
+      // mas operações de empréstimo/consulta devem ser bloqueadas individualmente.
+      if (!user) {
+        return res.status(401).json({ success: false, message: 'Usuário não encontrado' });
       }
       req.user = user;
+      req.userRole = 'student';
     } else {
       const admin = await Admin.findByPk(decoded.id);
       if (!admin || !admin.ativo) {
         return res.status(401).json({ success: false, message: 'Admin não encontrado ou inativo' });
       }
       req.admin = admin;
+      req.userRole = admin.role; // 'admin' ou 'assistente'
     }
 
     next();

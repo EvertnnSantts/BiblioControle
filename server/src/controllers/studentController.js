@@ -14,7 +14,7 @@ const getDashboard = async (req, res, next) => {
     // Empréstimos ativos
     const activeLoans = await Loan.findAll({
       where: { userId, status: { [Op.in]: ['ativo', 'atrasado'] } },
-      include: [{ model: Book, as: 'book', attributes: ['titulo', 'autor', 'capa'] }]
+      include: [{ model: Book, as: 'book', attributes: ['titulo', 'autor'] }]
     });
 
     // Consultas locais ativas

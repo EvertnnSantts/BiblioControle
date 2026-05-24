@@ -15,6 +15,7 @@ const StudentDashboard = () => {
   useAutoLogout();
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
   const [books, setBooks] = useState([]);
   const [search, setSearch] = useState('');
   const [now, setNow] = useState(new Date());
@@ -31,10 +32,12 @@ const StudentDashboard = () => {
 
   const fetchDashboard = async () => {
     try {
+      setFetchError(false);
       const res = await studentService.getDashboard();
       setDashboardData(res.data.data);
     } catch (error) {
       console.error('Erro ao buscar dashboard:', error);
+      setFetchError(true);
     } finally {
       setLoading(false);
     }
@@ -65,6 +68,30 @@ const StudentDashboard = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
+      </div>
+    );
+  }
+
+  if (fetchError || !dashboardData) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-gray-700 mb-2">Erro ao carregar seus dados</h2>
+          <p className="text-gray-500 mb-6">Não foi possível conectar ao servidor. Verifique sua conexão.</p>
+          <button
+            onClick={fetchDashboard}
+            className="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
+          >
+            Tentar Novamente
+          </button>
+          <button
+            onClick={handleLogout}
+            className="ml-4 px-6 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            Sair
+          </button>
+        </div>
       </div>
     );
   }

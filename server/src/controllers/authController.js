@@ -124,10 +124,10 @@ const register = async (req, res, next) => {
  */
 const getMe = async (req, res, next) => {
   try {
-    if (req.user && req.user.role === 'student') {
+    if (req.userRole === 'student') {
       return res.json({
         success: true,
-        data: { user: req.user, role: 'student' }
+        data: { user: { ...req.user.toJSON(), role: 'student' }, role: 'student' }
       });
     }
     res.json({
