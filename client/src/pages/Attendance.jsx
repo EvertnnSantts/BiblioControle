@@ -6,6 +6,7 @@ import Select from '../components/ui/Select';
 import Button from '../components/ui/Button';
 import Table from '../components/ui/Table';
 import Modal from '../components/ui/Modal';
+import ConfirmModal from '../components/ui/ConfirmModal';
 import Input from '../components/ui/Input';
 import { Plus, Search, User, LogIn, LogOut, ArrowLeft, Download, CheckCircle } from 'lucide-react';
 
@@ -39,6 +40,9 @@ const Attendance = () => {
   const [newListData, setNewListData] = useState({ nome: '', data: '', turno: 'Manhã' });
   const [exitData, setExitData] = useState({ codigoSaida: '' });
   const [selectedRecordId, setSelectedRecordId] = useState(null);
+
+  const [confirmAdminExit, setConfirmAdminExit] = useState({ isOpen: false, id: null });
+  const [confirmDeleteList, setConfirmDeleteList] = useState({ isOpen: false, id: null });
 
   useEffect(() => {
     if (view === 'lists') {
@@ -144,26 +148,22 @@ const Attendance = () => {
   };
 
   const handleAdminExit = async (id) => {
-    if (window.confirm('Tem certeza que deseja confirmar a saída manualmente sem o código do aluno?')) {
-      try {
-        await attendanceService.adminRegisterExit(id);
-        success('Saída manual registrada com sucesso!');
-        fetchListDetails(currentList.id);
-      } catch (err) {
-        error(err.response?.data?.message || 'Erro ao registrar saída manual');
-      }
+    try {
+      await attendanceService.adminRegisterExit(id);
+      success('Saída manual registrada com sucesso!');
+      fetchListDetails(currentList.id);
+    } catch (err) {
+      error(err.response?.data?.message || 'Erro ao registrar saída manual');
     }
   };
 
   const handleDeleteList = async (id) => {
-    if (window.confirm('Excluir esta lista apagará todos os registros de entrada e saída. Tem certeza?')) {
-      try {
-        await attendanceService.deleteList(id);
-        success('Lista excluída.');
-        fetchLists();
-      } catch (err) {
-        error('Erro ao excluir lista.');
-      }
+    try {
+      await attendanceService.deleteList(id);
+      success('Lista excluída.');
+      fetchLists();
+    } catch (err) {
+      error('Erro ao excluir lista.');
     }
   };
 
@@ -182,8 +182,21 @@ const Attendance = () => {
       r.status
     ]);
 
-    const csvContent = "data:text/csv;charset=utf-8," 
-      + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+    const separator = ';';
+    const escapeCsv = (str) => {
+        if (str === null || str === undefined) return '""';
+        const stringified = String(str);
+        if (stringified.includes(separator) || stringified.includes('"') || stringified.includes('\n')) {
+            return `"${stringified.replace(/"/g, '""')}"`;
+        }
+        return stringified;
+    };
+
+    const csvContent = "data:text/csv;charset=utf-8,\uFEFF" 
+      + [
+          headers.map(escapeCsv).join(separator), 
+          ...rows.map(e => e.map(escapeCsv).join(separator))
+        ].join("\n");
       
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
@@ -221,7 +234,7 @@ const Attendance = () => {
                 Registrar Saída
               </button>
               <button 
-                onClick={() => handleAdminExit(row.id)}
+                onClick={() => setConfirmAdminExit({ isOpen: true, id: row.id })}
                 className="text-red-600 hover:text-red-800 text-sm font-medium"
                 title="Admin: Forçar saída se perdeu o código"
               >
@@ -356,7 +369,7 @@ const Attendance = () => {
     { header: 'Ações', render: (row) => (
       <div className="flex items-center gap-3">
         <button onClick={() => { setCurrentList(row); setView('details'); }} className="text-blue-600 hover:text-blue-800 text-sm font-medium">Abrir</button>
-        <button onClick={() => handleDeleteList(row.id)} className="text-red-600 hover:text-red-800 text-sm font-medium">Excluir</button>
+        <button onClick={() => setConfirmDeleteList({ isOpen: true, id: row.id })} className="text-red-600 hover:text-red-800 text-sm font-medium">Excluir</button>
       </div>
     )}
   ];
@@ -428,6 +441,24 @@ const Attendance = () => {
           </div>
         </form>
       </Modal>
+
+      <ConfirmModal
+        isOpen={confirmAdminExit.isOpen}
+        onClose={() => setConfirmAdminExit({ isOpen: false, id: null })}
+        onConfirm={() => handleAdminExit(confirmAdminExit.id)}
+        title="Saída Manual"
+        message="Tem certeza que deseja confirmar a saída manualmente sem o código do aluno?"
+        confirmText="Confirmar Saída"
+      />
+
+      <ConfirmModal
+        isOpen={confirmDeleteList.isOpen}
+        onClose={() => setConfirmDeleteList({ isOpen: false, id: null })}
+        onConfirm={() => handleDeleteList(confirmDeleteList.id)}
+        title="Excluir Lista"
+        message="Excluir esta lista apagará todos os registros de entrada e saída. Tem certeza?"
+        confirmText="Excluir"
+      />
     </div>
   );
 };

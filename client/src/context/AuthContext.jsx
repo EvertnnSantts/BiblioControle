@@ -8,12 +8,15 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (token) {
       authService.getMe()
-        .then(res => setUser(res.data.data.admin))
+        .then(res => {
+          const data = res.data.data;
+          setUser(data.admin || data.user);
+        })
         .catch(() => {
-          localStorage.removeItem('token');
+          sessionStorage.removeItem('token');
         })
         .finally(() => setLoading(false));
     } else {
@@ -24,18 +27,26 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     const response = await authService.login({ email, password });
     const { token, admin } = response.data.data;
-    localStorage.setItem('token', token);
+    sessionStorage.setItem('token', token);
     setUser(admin);
     return response.data;
   };
 
+  const studentLogin = async (email, password) => {
+    const response = await authService.studentLogin({ email, password });
+    const { token, user } = response.data.data;
+    sessionStorage.setItem('token', token);
+    setUser(user);
+    return response.data;
+  };
+
   const logout = () => {
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, studentLogin, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

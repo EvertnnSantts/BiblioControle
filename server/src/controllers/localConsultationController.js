@@ -241,6 +241,23 @@ const returnConsulta = async (req, res, next) => {
 
     await consulta.save();
 
+    // Desbloquear usuário se não houver outras pendências
+    const { User, Loan } = require('../models');
+    const user = await User.findByPk(consulta.userId);
+    if (user && !user.ativo) {
+      const outrasVencidas = await LocalConsultation.count({
+        where: { userId: user.id, status: 'vencida' }
+      });
+      const emprestimosAtivos = await Loan.count({
+        where: { userId: user.id, status: 'ativo' }
+      });
+      
+      if (outrasVencidas === 0 && emprestimosAtivos === 0) {
+        user.ativo = true;
+        await user.save();
+      }
+    }
+
     res.json({
       success: true,
       message: 'Consulta local encerrada com sucesso',

@@ -5,9 +5,9 @@ const { loginSchema, createAdminSchema } = require('../utils/validations');
 /**
  * Gerar token JWT
  */
-const generateToken = (admin) => {
+const generateToken = (user, type = 'admin') => {
   return jwt.sign(
-    { id: admin.id, email: admin.email },
+    { id: user.id, email: user.email, role: type === 'admin' ? user.role : 'student' },
     process.env.JWT_SECRET || 'biblio-controle-secret-key',
     { expiresIn: '24h' }
   );
@@ -124,13 +124,59 @@ const register = async (req, res, next) => {
  */
 const getMe = async (req, res, next) => {
   try {
+    if (req.user && req.user.role === 'student') {
+      return res.json({
+        success: true,
+        data: { user: req.user, role: 'student' }
+      });
+    }
     res.json({
       success: true,
-      data: { admin: req.admin.toJSON() }
+      data: { admin: req.admin.toJSON(), role: req.admin.role }
     });
   } catch (error) {
     next(error);
   }
 };
 
-module.exports = { login, register, getMe };
+/**
+ * POST /api/auth/student-login - Login de aluno
+ */
+const studentLogin = async (req, res, next) => {
+  try {
+    const { error, value } = loginSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ success: false, message: error.details[0].message });
+    }
+
+    const { email, password } = value;
+    const { User } = require('../models');
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Email ou senha incorretos' });
+    }
+
+    const isValid = await user.validatePassword(password);
+    if (!isValid) {
+      return res.status(401).json({ success: false, message: 'Email ou senha incorretos' });
+    }
+
+    // Gerar token de estudante
+    const token = generateToken(user, 'student');
+
+    res.json({
+      success: true,
+      message: 'Login realizado com sucesso',
+      data: {
+        token,
+        user: user.toJSON(),
+        role: 'student'
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { login, register, getMe, studentLogin };

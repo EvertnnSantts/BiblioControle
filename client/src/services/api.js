@@ -11,7 +11,7 @@ const api = axios.create({
 
 // Interceptor para adicionar token
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -23,7 +23,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
       window.location.href = '/login';
     }
     return Promise.reject(error);
@@ -33,6 +33,7 @@ api.interceptors.response.use(
 // Auth
 export const authService = {
   login: (data) => api.post('/auth/login', data),
+  studentLogin: (data) => api.post('/auth/student-login', data),
   register: (data) => api.post('/auth/register', data),
   getMe: () => api.get('/auth/me')
 };
@@ -90,6 +91,12 @@ export const attendanceService = {
   registerEntry: (data) => api.post('/attendance/records/entry', data),
   registerExit: (id, data) => api.post(`/attendance/records/${id}/exit`, data),
   adminRegisterExit: (id) => api.post(`/attendance/records/${id}/admin-exit`)
+};
+
+// Student
+export const studentService = {
+  getDashboard: () => api.get('/student/dashboard'),
+  getAvailableBooks: (params) => api.get('/student/books', { params })
 };
 
 export default api;

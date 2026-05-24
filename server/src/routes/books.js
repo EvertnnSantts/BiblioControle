@@ -1,30 +1,30 @@
 const express = require('express');
 const router = express.Router();
 const bookController = require('../controllers/bookController');
-const { authenticate } = require('../middleware/auth');
+const { authenticate, requireAdmin } = require('../middleware/auth');
 
 // GET /api/books - Listar livros
-router.get('/', authenticate, bookController.getAllBooks);
+router.get('/', authenticate, requireAdmin, bookController.getAllBooks);
 
 // GET /api/books/stats - Estatísticas
-router.get('/stats', authenticate, bookController.getStats);
+router.get('/stats', authenticate, requireAdmin, bookController.getStats);
 
 // GET /api/books/generos - Listar gêneros
-router.get('/generos', authenticate, bookController.getGeneros);
+router.get('/generos', authenticate, requireAdmin, bookController.getGeneros);
 
 // GET /api/books/autores - Listar autores
-router.get('/autores', authenticate, bookController.getAutores);
+router.get('/autores', authenticate, requireAdmin, bookController.getAutores);
 
 // GET /api/books/:id - Obter livro por ID
-router.get('/:id', authenticate, bookController.getBookById);
+router.get('/:id', authenticate, requireAdmin, bookController.getBookById);
 
 // POST /api/books - Criar livro
-router.post('/', authenticate, bookController.createBook);
+router.post('/', authenticate, requireAdmin, bookController.createBook);
 
 // PUT /api/books/:id - Atualizar livro
-router.put('/:id', authenticate, bookController.updateBook);
+router.put('/:id', authenticate, requireAdmin, bookController.updateBook);
 
 // DELETE /api/books/:id - Deletar livro
-router.delete('/:id', authenticate, bookController.deleteBook);
+router.delete('/:id', authenticate, requireAdmin, bookController.deleteBook);
 
 module.exports = router;

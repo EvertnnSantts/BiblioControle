@@ -7,7 +7,10 @@ import Select from '../components/ui/Select';
 import Button from '../components/ui/Button';
 import Table from '../components/ui/Table';
 import Modal from '../components/ui/Modal';
+import ConfirmModal from '../components/ui/ConfirmModal';
+import PromptModal from '../components/ui/PromptModal';
 import { Plus, Search, Edit2, Trash2, Ban } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Users = () => {
   const { success, error } = useToast();
@@ -25,8 +28,12 @@ const Users = () => {
     telefone: '',
     endereco: '',
     matricula: '',
-    curso: ''
+    curso: '',
+    turma: ''
   });
+  const [confirmDelete, setConfirmDelete] = useState({ isOpen: false, id: null });
+  const [promptBlock, setPromptBlock] = useState({ isOpen: false, id: null });
+  const { user } = useAuth();
 
   const fetchUsers = async () => {
     try {
@@ -83,35 +90,31 @@ const Users = () => {
       telefone: user.telefone,
       endereco: user.endereco,
       matricula: user.matricula,
-      curso: user.curso
+      curso: user.curso,
+      turma: user.turma || ''
     });
     setModalOpen(true);
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Tem certeza que deseja excluir este usuário?')) {
-      try {
-        await userService.delete(id);
-        success('Usuário excluído com sucesso!');
-        fetchUsers();
-      } catch (err) {
-        console.error('Erro ao excluir usuário:', err);
-        error(err.response?.data?.message || 'Erro ao excluir usuário');
-      }
+    try {
+      await userService.delete(id);
+      success('Usuário excluído com sucesso!');
+      fetchUsers();
+    } catch (err) {
+      console.error('Erro ao excluir usuário:', err);
+      error(err.response?.data?.message || 'Erro ao excluir usuário');
     }
   };
 
-  const handleBlock = async (id) => {
-    const motivo = window.prompt('Qual o motivo do bloqueio?');
-    if (motivo) {
-      try {
-        await userService.block(id, { motivo });
-        success('Usuário bloqueado com sucesso!');
-        fetchUsers();
-      } catch (err) {
-        console.error('Erro ao bloquear usuário:', err);
-        error(err.response?.data?.message || 'Erro ao bloquear usuário');
-      }
+  const handleBlock = async (id, motivo) => {
+    try {
+      await userService.block(id, { motivo });
+      success('Usuário bloqueado com sucesso!');
+      fetchUsers();
+    } catch (err) {
+      console.error('Erro ao bloquear usuário:', err);
+      error(err.response?.data?.message || 'Erro ao bloquear usuário');
     }
   };
 
@@ -124,7 +127,8 @@ const Users = () => {
       telefone: '',
       endereco: '',
       matricula: '',
-      curso: ''
+      curso: '',
+      turma: ''
     });
   };
 
@@ -133,6 +137,7 @@ const Users = () => {
     { header: 'Email', accessor: 'email' },
     { header: 'Telefone', accessor: 'telefone' },
     { header: 'Curso', accessor: 'curso' },
+    { header: 'Turma', accessor: 'turma' },
     { header: 'Matrícula', accessor: 'matricula' },
     { header: 'Status', accessor: 'ativo', render: (row) => (
       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -146,12 +151,14 @@ const Users = () => {
         <button onClick={() => handleEdit(row)} className="p-1 text-blue-600 hover:bg-blue-50 rounded" title="Editar">
           <Edit2 className="w-4 h-4" />
         </button>
-        <button onClick={() => handleBlock(row.id)} className="p-1 text-orange-600 hover:bg-orange-50 rounded" title="Bloquear">
+        <button onClick={() => setPromptBlock({ isOpen: true, id: row.id })} className="p-1 text-orange-600 hover:bg-orange-50 rounded" title="Bloquear">
           <Ban className="w-4 h-4" />
         </button>
-        <button onClick={() => handleDelete(row.id)} className="p-1 text-red-600 hover:bg-red-50 rounded" title="Excluir">
-          <Trash2 className="w-4 h-4" />
-        </button>
+        {user?.role === 'admin' && (
+          <button onClick={() => setConfirmDelete({ isOpen: true, id: row.id })} className="p-1 text-red-600 hover:bg-red-50 rounded" title="Excluir">
+            <Trash2 className="w-4 h-4" />
+          </button>
+        )}
       </div>
     )}
   ];
@@ -247,7 +254,7 @@ const Users = () => {
             onChange={(e) => setFormData({ ...formData, endereco: e.target.value })}
             required
           />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Input
               label="Matrícula"
               value={formData.matricula}
@@ -260,6 +267,11 @@ const Users = () => {
               onChange={(e) => setFormData({ ...formData, curso: e.target.value })}
               required
             />
+            <Input
+              label="Turma (opcional)"
+              value={formData.turma}
+              onChange={(e) => setFormData({ ...formData, turma: e.target.value })}
+            />
           </div>
           <div className="flex justify-end gap-3 pt-4">
             <Button type="button" variant="secondary" onClick={() => { setModalOpen(false); resetForm(); }}>
@@ -271,6 +283,25 @@ const Users = () => {
           </div>
         </form>
       </Modal>
+
+      <ConfirmModal
+        isOpen={confirmDelete.isOpen}
+        onClose={() => setConfirmDelete({ isOpen: false, id: null })}
+        onConfirm={() => handleDelete(confirmDelete.id)}
+        title="Excluir Usuário"
+        message="Tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita."
+        confirmText="Excluir"
+      />
+
+      <PromptModal
+        isOpen={promptBlock.isOpen}
+        onClose={() => setPromptBlock({ isOpen: false, id: null })}
+        onConfirm={(motivo) => handleBlock(promptBlock.id, motivo)}
+        title="Bloquear Usuário"
+        message="Qual o motivo do bloqueio?"
+        placeholder="Descreva o motivo"
+        confirmText="Bloquear"
+      />
     </div>
   );
 };

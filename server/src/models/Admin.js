@@ -32,6 +32,10 @@ const Admin = sequelize.define('Admin', {
     type: DataTypes.BOOLEAN,
     defaultValue: true
   },
+  role: {
+    type: DataTypes.ENUM('admin', 'assistente'),
+    defaultValue: 'assistente'
+  },
   ultimoAcesso: {
     type: DataTypes.DATE,
     allowNull: true

@@ -7,6 +7,7 @@ import Select from '../components/ui/Select';
 import Button from '../components/ui/Button';
 import Table from '../components/ui/Table';
 import Modal from '../components/ui/Modal';
+import ConfirmModal from '../components/ui/ConfirmModal';
 import { Plus, Search, Edit2, Trash2, X } from 'lucide-react';
 
 const GENRES = [
@@ -47,6 +48,7 @@ const Books = () => {
     genero: 'OUTROS',
     situacao: 'disponivel'
   });
+  const [confirmDelete, setConfirmDelete] = useState({ isOpen: false, id: null });
 
   const fetchBooks = async () => {
     try {
@@ -98,15 +100,13 @@ const Books = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Tem certeza que deseja excluir este livro?')) {
-      try {
-        await bookService.delete(id);
-        success('Livro excluído com sucesso!');
-        fetchBooks();
-      } catch (err) {
-        console.error('Erro ao excluir livro:', err);
-        error(err.response?.data?.message || 'Erro ao excluir livro');
-      }
+    try {
+      await bookService.delete(id);
+      success('Livro excluído com sucesso!');
+      fetchBooks();
+    } catch (err) {
+      console.error('Erro ao excluir livro:', err);
+      error(err.response?.data?.message || 'Erro ao excluir livro');
     }
   };
 
@@ -158,7 +158,7 @@ const Books = () => {
         <button onClick={() => handleEdit(row)} className="p-1 text-blue-600 hover:bg-blue-50 rounded" title="Editar">
           <Edit2 className="w-4 h-4" />
         </button>
-        <button onClick={() => handleDelete(row.id)} className="p-1 text-red-600 hover:bg-red-50 rounded" title="Excluir">
+        <button onClick={() => setConfirmDelete({ isOpen: true, id: row.id })} className="p-1 text-red-600 hover:bg-red-50 rounded" title="Excluir">
           <Trash2 className="w-4 h-4" />
         </button>
       </div>
@@ -275,6 +275,15 @@ const Books = () => {
           </div>
         </form>
       </Modal>
+
+      <ConfirmModal
+        isOpen={confirmDelete.isOpen}
+        onClose={() => setConfirmDelete({ isOpen: false, id: null })}
+        onConfirm={() => handleDelete(confirmDelete.id)}
+        title="Excluir Livro"
+        message="Tem certeza que deseja excluir este livro? Esta ação não pode ser desfeita e pode afetar empréstimos vinculados."
+        confirmText="Excluir"
+      />
     </div>
   );
 };

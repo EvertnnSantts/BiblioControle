@@ -6,6 +6,8 @@ import Select from '../components/ui/Select';
 import Button from '../components/ui/Button';
 import Table from '../components/ui/Table';
 import Modal from '../components/ui/Modal';
+import ConfirmModal from '../components/ui/ConfirmModal';
+import PromptModal from '../components/ui/PromptModal';
 import Input from '../components/ui/Input';
 import { Plus, RotateCcw, Search, User, BookOpen, Check, Ban } from 'lucide-react';
 
@@ -28,6 +30,8 @@ const Loans = () => {
     dataPrevista: '',
     turma: ''
   });
+  const [confirmReturn, setConfirmReturn] = useState({ isOpen: false, id: null });
+  const [promptBlock, setPromptBlock] = useState({ isOpen: false, userId: null, loanId: null });
 
 
   const fetchLoans = async () => {
@@ -136,23 +140,18 @@ const Loans = () => {
   };
 
   const handleReturn = async (id) => {
-    if (window.confirm('Confirmar devolução do livro?')) {
-      try {
-        await loanService.return(id, {});
-        success('Livro devolvido com sucesso! Usuário desbloqueado automaticamente.');
-        fetchLoans();
-      } catch (err) {
-        console.error('Erro ao devolver livro:', err);
-        error(err.response?.data?.message || 'Erro ao devolver livro');
-      }
+    try {
+      await loanService.return(id, {});
+      success('Livro devolvido com sucesso! Usuário desbloqueado automaticamente.');
+      fetchLoans();
+    } catch (err) {
+      console.error('Erro ao devolver livro:', err);
+      error(err.response?.data?.message || 'Erro ao devolver livro');
     }
   };
 
   // Bloquear usuário (mantém empréstimo ativo)
-  const handleBlockUser = async (userId, loanId) => {
-    const motivo = window.prompt('Digite o motivo do bloqueio:');
-    if (!motivo) return;
-    
+  const handleBlockUser = async (userId, motivo) => {
     try {
       await userService.block(userId, { motivo });
       success('Usuário bloqueado com sucesso!');
@@ -234,7 +233,7 @@ const Loans = () => {
         {row.status === 'ativo' && (
           <>
             <button 
-              onClick={() => handleReturn(row.id)} 
+              onClick={() => setConfirmReturn({ isOpen: true, id: row.id })} 
               className="p-1 text-green-600 hover:bg-green-50 rounded"
               title="Devolver"
             >
@@ -242,7 +241,7 @@ const Loans = () => {
             </button>
             {row.user?.ativo !== false && (
               <button 
-                onClick={() => handleBlockUser(row.userId, row.id)} 
+                onClick={() => setPromptBlock({ isOpen: true, userId: row.userId, loanId: row.id })} 
                 className="p-1 text-red-600 hover:bg-red-50 rounded"
                 title="Bloquear usuário"
               >
@@ -429,6 +428,26 @@ const Loans = () => {
           </div>
         </form>
       </Modal>
+
+      <ConfirmModal
+        isOpen={confirmReturn.isOpen}
+        onClose={() => setConfirmReturn({ isOpen: false, id: null })}
+        onConfirm={() => handleReturn(confirmReturn.id)}
+        title="Confirmar Devolução"
+        message="Tem certeza que deseja confirmar a devolução deste livro?"
+        confirmText="Devolver"
+        variant="primary"
+      />
+
+      <PromptModal
+        isOpen={promptBlock.isOpen}
+        onClose={() => setPromptBlock({ isOpen: false, userId: null, loanId: null })}
+        onConfirm={(motivo) => handleBlockUser(promptBlock.userId, motivo)}
+        title="Bloquear Usuário"
+        message="Qual o motivo do bloqueio?"
+        placeholder="Descreva o motivo"
+        confirmText="Bloquear"
+      />
     </div>
   );
 };

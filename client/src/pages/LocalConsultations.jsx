@@ -6,6 +6,7 @@ import Select from '../components/ui/Select';
 import Button from '../components/ui/Button';
 import Table from '../components/ui/Table';
 import Modal from '../components/ui/Modal';
+import ConfirmModal from '../components/ui/ConfirmModal';
 import Input from '../components/ui/Input';
 import { Plus, RotateCcw, Search, User, BookOpen, Clock, CheckCircle } from 'lucide-react';
 
@@ -27,6 +28,7 @@ const LocalConsultations = () => {
     duracaoTempo: '04:00',
     turma: ''
   });
+  const [confirmReturn, setConfirmReturn] = useState({ isOpen: false, id: null });
 
   // Atualiza o relógio a cada segundo para o contador regressivo
   useEffect(() => {
@@ -111,15 +113,13 @@ const LocalConsultations = () => {
   };
 
   const handleReturn = async (id) => {
-    if (window.confirm('Confirmar devolução do livro e encerramento da consulta?')) {
-      try {
-        await localConsultationService.return(id, {});
-        success('Consulta encerrada com sucesso!');
-        fetchConsultas();
-      } catch (err) {
-        console.error('Erro ao encerrar consulta:', err);
-        error(err.response?.data?.message || 'Erro ao encerrar consulta');
-      }
+    try {
+      await localConsultationService.return(id, {});
+      success('Consulta encerrada com sucesso!');
+      fetchConsultas();
+    } catch (err) {
+      console.error('Erro ao encerrar consulta:', err);
+      error(err.response?.data?.message || 'Erro ao encerrar consulta');
     }
   };
 
@@ -190,9 +190,9 @@ const LocalConsultations = () => {
     }},
     { header: 'Ações', width: '120px', render: (row) => (
       <div className="flex items-center gap-2">
-        {row.status === 'em_consulta' && (
+        {(row.status === 'em_consulta' || row.status === 'vencida') && (
           <button 
-            onClick={() => handleReturn(row.id)} 
+            onClick={() => setConfirmReturn({ isOpen: true, id: row.id })} 
             className="p-1 text-green-600 hover:bg-green-50 rounded flex items-center gap-1"
             title="Devolver"
           >
@@ -324,6 +324,16 @@ const LocalConsultations = () => {
           </div>
         </form>
       </Modal>
+
+      <ConfirmModal
+        isOpen={confirmReturn.isOpen}
+        onClose={() => setConfirmReturn({ isOpen: false, id: null })}
+        onConfirm={() => handleReturn(confirmReturn.id)}
+        title="Encerrar Consulta"
+        message="Tem certeza que deseja confirmar a devolução deste livro e encerrar a consulta?"
+        confirmText="Devolver"
+        variant="primary"
+      />
     </div>
   );
 };

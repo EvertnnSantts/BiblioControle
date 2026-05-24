@@ -10,9 +10,11 @@ import Loans from './pages/Loans';
 import LocalConsultations from './pages/LocalConsultations';
 import Attendance from './pages/Attendance';
 import Library from './pages/Library';
+import StudentLogin from './pages/StudentLogin';
+import StudentDashboard from './pages/StudentDashboard';
 
 // Protected Route Component
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -25,6 +27,11 @@ const ProtectedRoute = ({ children }) => {
 
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+
+  // Check roles
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to={user.role === 'student' ? '/aluno' : '/dashboard'} replace />;
   }
 
   return children;
@@ -43,7 +50,7 @@ const PublicRoute = ({ children }) => {
   }
 
   if (user) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={user.role === 'student' ? '/aluno' : '/dashboard'} replace />;
   }
 
   return children;
@@ -58,10 +65,15 @@ function AppRoutes() {
           <Login />
         </PublicRoute>
       } />
+      <Route path="/aluno/login" element={
+        <PublicRoute>
+          <StudentLogin />
+        </PublicRoute>
+      } />
 
-      {/* Protected Routes */}
+      {/* Protected Routes - Admin */}
       <Route path="/" element={
-        <ProtectedRoute>
+        <ProtectedRoute allowedRoles={['admin', 'assistente']}>
           <Layout />
         </ProtectedRoute>
       }>
@@ -75,8 +87,15 @@ function AppRoutes() {
         <Route path="library" element={<Library />} />
       </Route>
 
+      {/* Protected Routes - Student */}
+      <Route path="/aluno" element={
+        <ProtectedRoute allowedRoles={['student']}>
+          <StudentDashboard />
+        </ProtectedRoute>
+      } />
+
       {/* Catch all */}
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

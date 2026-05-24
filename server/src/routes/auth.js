@@ -11,6 +11,12 @@ router.post('/login', [
   body('password').isLength({ min: 6 }).withMessage('Senha deve ter pelo menos 6 caracteres')
 ], validate, authController.login);
 
+// POST /api/auth/student-login - Login de aluno
+router.post('/student-login', [
+  body('email').isEmail().withMessage('Email inválido'),
+  body('password').isLength({ min: 6 }).withMessage('Senha deve ter pelo menos 6 caracteres')
+], validate, authController.studentLogin);
+
 // POST /api/auth/register - Criar admin
 router.post('/register', [
   body('email').isEmail().withMessage('Email inválido'),
