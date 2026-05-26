@@ -9,7 +9,7 @@ async function seed() {
 
   const admin = await Admin.create({
     email: 'Assistente@biblicontrole.com',
-    password: '45897010',
+    password: '1234Biol',
     nome: 'Assistente',
     ativo: true
   });
