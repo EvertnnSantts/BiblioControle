@@ -12,6 +12,8 @@ import Attendance from './pages/Attendance';
 import Library from './pages/Library';
 import StudentLogin from './pages/StudentLogin';
 import StudentDashboard from './pages/StudentDashboard';
+import StudentWallet from './pages/StudentWallet';
+import BarcodeAdmin from './pages/BarcodeAdmin';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -85,12 +87,23 @@ function AppRoutes() {
         <Route path="local-consultations" element={<LocalConsultations />} />
         <Route path="attendance" element={<Attendance />} />
         <Route path="library" element={<Library />} />
+        <Route path="codigos-barras" element={<BarcodeAdmin />} />
       </Route>
 
       {/* Protected Routes - Student */}
       <Route path="/aluno" element={
         <ProtectedRoute allowedRoles={['student']}>
           <StudentDashboard />
+        </ProtectedRoute>
+      } />
+      <Route path="/aluno/dashboard" element={
+        <ProtectedRoute allowedRoles={['student']}>
+          <StudentDashboard />
+        </ProtectedRoute>
+      } />
+      <Route path="/aluno/carteira" element={
+        <ProtectedRoute allowedRoles={['student']}>
+          <StudentWallet />
         </ProtectedRoute>
       } />
 

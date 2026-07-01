@@ -155,34 +155,28 @@ const createLoan = async (req, res, next) => {
       });
     }
 
-    // Verificar limite de 1 empréstimo ativo por usuário
+    // Verificar limite de 2 empréstimos ativos por usuário
     const emprestimosAtivoUsuario = await Loan.count({
       where: { userId, status: 'ativo' }
     });
-    if (emprestimosAtivoUsuario >= 1) {
+    if (emprestimosAtivoUsuario >= 2) {
       return res.status(400).json({
         success: false,
-        message: 'Este usuário já possui um empréstimo ativo. Cada usuário pode ter no máximo 1 livro emprestado por vez.'
+        message: 'Este usuário já possui 2 empréstimos ativos. Cada usuário pode ter no máximo 2 livros emprestados por vez.'
       });
     }
 
-    // Verificar se usuário tem consulta local ativa ou vencida
-    const consultaAtivaUsuario = await LocalConsultation.findOne({
+    // Verificar se usuário tem consulta local vencida
+    const consultaVencidaUsuario = await LocalConsultation.findOne({
       where: { 
         userId, 
-        status: { [Op.in]: ['em_consulta', 'vencida'] } 
+        status: 'vencida' 
       }
     });
-    if (consultaAtivaUsuario) {
-      if (consultaAtivaUsuario.status === 'vencida') {
-        return res.status(400).json({
-          success: false,
-          message: 'Este usuário possui uma consulta local vencida e está temporariamente bloqueado.'
-        });
-      }
+    if (consultaVencidaUsuario) {
       return res.status(400).json({
         success: false,
-        message: 'Este usuário já possui uma consulta local ativa. Não é possível realizar o empréstimo.'
+        message: 'Este usuário possui uma consulta local vencida e está temporariamente bloqueado. Devolva o livro da consulta para realizar o empréstimo.'
       });
     }
 

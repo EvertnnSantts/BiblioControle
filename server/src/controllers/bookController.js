@@ -6,6 +6,7 @@
 const { Book, Loan, LocalConsultation, sequelize } = require('../models');
 const { Op } = require('sequelize');
 const { createBookSchema, updateBookSchema } = require('../utils/validations');
+const crypto = require('crypto');
 
 const getAllBooks = async (req, res, next) => {
   try {
@@ -219,6 +220,86 @@ const getStats = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+const createBulk = async (req, res, next) => {
+  try {
+    const { error, value } = createBookSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ success: false, message: error.details[0].message });
+    }
+
+    const quantidade = value.quantidade || 1;
+    const grupoExemplar = crypto.randomUUID();
+    const booksToCreate = [];
+    const timestamp = Date.now();
+
+    for (let i = 1; i <= quantidade; i++) {
+      const codigoBarras = `LIV-${timestamp}-${i}`;
+      booksToCreate.push({
+        titulo: value.titulo?.toUpperCase() ?? null,
+        autor: value.autor?.toUpperCase() ?? null,
+        quantidade: 1,
+        quantidadeDisponivel: 1,
+        estante: value.estante?.toUpperCase() ?? null,
+        observacao: value.observacao?.toUpperCase() ?? null,
+        situacao: value.situacao || 'disponivel',
+        genero: value.genero?.toUpperCase() ?? null,
+        codigoBarras,
+        grupoExemplar,
+        numeroExemplar: i
+      });
+    }
+
+    const createdBooks = await Book.bulkCreate(booksToCreate);
+    res.status(201).json({
+      success: true,
+      message: `${quantidade} exemplares cadastrados com sucesso.`,
+      data: { books: createdBooks }
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-module.exports = { getAllBooks, getBookById, createBook, updateBook, deleteBook, getGeneros, getAutores, getStats };
+const getByBarcode = async (req, res, next) => {
+  try {
+    const { barcode } = req.params;
+    const book = await Book.findOne({ where: { codigoBarras: barcode } });
+    if (!book) {
+      return res.status(404).json({ success: false, message: 'Livro não encontrado' });
+    }
+
+    const emprestimosAtivos = await Loan.count({
+      where: { bookId: book.id, status: 'ativo' }
+    });
+    const consultaAtiva = await LocalConsultation.findOne({
+      where: { bookId: book.id, status: 'em_consulta' }
+    });
+    const disponivel = Math.max(0, book.quantidade - emprestimosAtivos);
+    const consultaLocal = book.situacao === 'consulta';
+
+    const bookWithAvailability = {
+      ...book.toJSON(),
+      quantidadeDisponivel: consultaLocal ? book.quantidade : disponivel,
+      emprestimosAtivos,
+      consultaLocal,
+      consultaAtiva: !!consultaAtiva
+    };
+
+    res.json({ success: true, data: { book: bookWithAvailability } });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { 
+  getAllBooks, 
+  getBookById, 
+  createBook, 
+  updateBook, 
+  deleteBook, 
+  getGeneros, 
+  getAutores, 
+  getStats,
+  createBulk,
+  getByBarcode
+};

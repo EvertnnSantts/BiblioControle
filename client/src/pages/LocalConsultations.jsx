@@ -9,6 +9,7 @@ import Modal from '../components/ui/Modal';
 import ConfirmModal from '../components/ui/ConfirmModal';
 import Input from '../components/ui/Input';
 import { Plus, RotateCcw, Search, User, BookOpen, Clock, CheckCircle } from 'lucide-react';
+import { useBarcodeScanner } from '../hooks/useBarcodeScanner';
 
 const LocalConsultations = () => {
   const { success, error } = useToast();
@@ -84,6 +85,54 @@ const LocalConsultations = () => {
     setUserSearch(`${user.nome} (${user.matricula})`);
     setUserResults([]);
   };
+
+  const handleBarcodeScan = async (code) => {
+    try {
+      if (code.startsWith('USR-')) {
+        const res = await userService.getByBarcode(code);
+        if (res.data.success && res.data.data.user) {
+          const user = res.data.data.user;
+          handleSelectUser(user);
+          success(`Aluno ${user.nome} selecionado!`);
+        }
+      } else if (code.startsWith('LIV-')) {
+        const res = await bookService.getByBarcode(code);
+        if (res.data.success && res.data.data.book) {
+          const book = res.data.data.book;
+          if (book.situacao !== 'consulta') {
+            error('Este livro é para empréstimo convencional. Use a aba de Empréstimos.');
+            return;
+          }
+          setFormData(prev => ({ ...prev, bookId: book.id }));
+          success(`Livro "${book.titulo}" selecionado!`);
+        }
+      } else {
+        const res = await bookService.getAll({ search: code });
+        if (res.data.success && res.data.data.books.length > 0) {
+          const book = res.data.data.books[0];
+          if (book.situacao !== 'consulta') {
+            error('Este livro é para empréstimo convencional. Use a aba de Empréstimos.');
+            return;
+          }
+          setFormData(prev => ({ ...prev, bookId: book.id }));
+          success(`Livro "${book.titulo}" selecionado!`);
+        } else {
+          const userRes = await userService.getAll({ search: code });
+          if (userRes.data.success && userRes.data.data.users.length > 0) {
+            const user = userRes.data.data.users[0];
+            handleSelectUser(user);
+            success(`Aluno ${user.nome} selecionado!`);
+          } else {
+            error('Código não reconhecido no sistema.');
+          }
+        }
+      }
+    } catch (err) {
+      error(err.response?.data?.message || 'Erro ao processar leitura do código.');
+    }
+  };
+
+  const barcodeScanner = useBarcodeScanner(handleBarcodeScan);
 
   useEffect(() => {
     fetchConsultas();
@@ -240,6 +289,24 @@ const LocalConsultations = () => {
         size="lg"
       >
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Campo de Leitura Rápida via Código de Barras / QR Code */}
+          <div className="p-3 bg-teal-50 border border-teal-200 rounded-lg">
+            <label className="block text-sm font-semibold text-teal-800 mb-1">
+              🔌 Leitor de Código de Barras / QR Code
+            </label>
+            <Input
+              ref={barcodeScanner.inputRef}
+              placeholder="Bipe a carteira do aluno ou o livro aqui..."
+              value={barcodeScanner.value}
+              onChange={barcodeScanner.handleChange}
+              onKeyDown={barcodeScanner.handleKeyDown}
+              className="border-teal-300 focus:ring-teal-500 focus:border-teal-500"
+            />
+            <p className="text-xs text-teal-600 mt-1">
+              Posicione o cursor no campo acima para bipar com o leitor Comtac PS-750.
+            </p>
+          </div>
+
           <div className="relative">
             <label className="block text-sm font-medium text-gray-700 mb-1">Usuário</label>
             <div className="relative">

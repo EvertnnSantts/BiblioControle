@@ -127,6 +127,13 @@ const StudentDashboard = () => {
             </div>
             <div className="flex items-center gap-4">
               <span className="text-sm font-medium hidden sm:block">Olá, {user.nome}</span>
+              <button
+                onClick={() => navigate('/aluno/carteira')}
+                className="flex items-center gap-2 px-3 py-2 rounded hover:bg-teal-600 transition-colors text-sm font-medium"
+                title="Minha Carteira"
+              >
+                🪪 <span className="hidden sm:inline">Minha Carteira</span>
+              </button>
               <button 
                 onClick={handleLogout}
                 className="flex items-center gap-2 px-3 py-2 rounded hover:bg-teal-600 transition-colors"

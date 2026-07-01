@@ -27,4 +27,10 @@ router.put('/:id', authenticate, requireAdmin, bookController.updateBook);
 // DELETE /api/books/:id - Deletar livro
 router.delete('/:id', authenticate, requireAdmin, bookController.deleteBook);
 
+// POST /api/books/bulk - Criar exemplares em massa
+router.post('/bulk', authenticate, requireAdmin, bookController.createBulk);
+
+// GET /api/books/barcode/:barcode - Obter livro por código de barras
+router.get('/barcode/:barcode', authenticate, requireAdmin, bookController.getByBarcode);
+
 module.exports = router;

@@ -49,7 +49,9 @@ export const bookService = {
   delete: (id) => api.delete(`/books/${id}`),
   getStats: () => api.get('/books/stats'),
   getGeneros: () => api.get('/books/generos'),
-  getAutores: () => api.get('/books/autores')
+  getAutores: () => api.get('/books/autores'),
+  createBulk: (data) => api.post('/books/bulk', data),
+  getByBarcode: (barcode) => api.get(`/books/barcode/${barcode}`)
 };
 
 // Users
@@ -62,7 +64,8 @@ export const userService = {
   block: (id, data) => api.post(`/users/${id}/block`, data),
   getCursos: () => api.get('/users/cursos'),
   getTurmas: () => api.get('/users/turmas'),
-  search: (query) => api.get('/users/search', { params: { q: query } })
+  search: (query) => api.get('/users/search', { params: { q: query } }),
+  getByBarcode: (barcode) => api.get(`/users/barcode/${barcode}`)
 };
 
 // Loans

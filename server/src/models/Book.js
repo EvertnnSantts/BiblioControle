@@ -70,6 +70,19 @@ const Book = sequelize.define('Book', {
     validate: {
       notEmpty: true
     }
+  },
+  codigoBarras: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+    unique: true
+  },
+  grupoExemplar: {
+    type: DataTypes.STRING(100),
+    allowNull: true
+  },
+  numeroExemplar: {
+    type: DataTypes.INTEGER,
+    defaultValue: 1
   }
 }, {
   tableName: 'books',

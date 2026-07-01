@@ -5,9 +5,9 @@ import {
   Users, 
   Library, 
   ArrowRightLeft,
-  Settings,
   Clock,
-  ClipboardList
+  ClipboardList,
+  Tags
 } from 'lucide-react';
 
 const navItems = [
@@ -18,6 +18,7 @@ const navItems = [
   { to: '/local-consultations', icon: Clock, label: 'Consulta Local' },
   { to: '/attendance', icon: ClipboardList, label: 'Presença' },
   { to: '/library', icon: Library, label: 'Biblioteca' },
+  { to: '/codigos-barras', icon: Tags, label: 'Etiquetas' },
 ];
 
 const Sidebar = () => {

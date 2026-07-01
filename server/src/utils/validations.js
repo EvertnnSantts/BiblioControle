@@ -68,7 +68,7 @@ const updateUserSchema = Joi.object({
   nome: Joi.string().min(3).max(100).optional(),
   email: Joi.string().email().optional(),
   password: Joi.string().min(6).optional(),
-  telefone: Joi.string().pattern(/^\(\d{2}\)\s\d{4,5}-\d{4}$/).optional(),
+  telefone: Joi.string().min(10).max(20).optional(),
   endereco: Joi.string().min(5).max(255).optional(),
   matricula: Joi.string().min(3).max(50).optional(),
   curso: Joi.string().min(2).max(100).optional(),

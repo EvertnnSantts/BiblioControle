@@ -30,4 +30,7 @@ router.delete('/:id', authenticate, requireSuperAdmin, userController.deleteUser
 // POST /api/users/:id/block - Bloquear usuário
 router.post('/:id/block', authenticate, requireAdmin, userController.blockUser);
 
+// GET /api/users/barcode/:barcode - Buscar usuário por código de barras
+router.get('/barcode/:barcode', authenticate, requireAdmin, userController.getByBarcode);
+
 module.exports = router;

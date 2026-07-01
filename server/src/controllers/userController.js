@@ -231,8 +231,35 @@ const getTurmas = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+const getByBarcode = async (req, res, next) => {
+  try {
+    const { barcode } = req.params;
+    let matricula = barcode;
+    if (barcode.startsWith('USR-')) {
+      matricula = barcode.replace('USR-', '');
+    }
+    const user = await User.findOne({
+      where: { matricula },
+      attributes: { exclude: ['password'] }
+    });
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'Usuário não encontrado' });
+    }
+    res.json({ success: true, data: { user } });
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = {
-  getAllUsers, searchUsers, getUserById, createUser, updateUser, deleteUser, blockUser, getCursos, getTurmas
+  getAllUsers, 
+  searchUsers, 
+  getUserById, 
+  createUser, 
+  updateUser, 
+  deleteUser, 
+  blockUser, 
+  getCursos, 
+  getTurmas,
+  getByBarcode
 };

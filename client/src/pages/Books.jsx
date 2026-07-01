@@ -142,6 +142,10 @@ const Books = () => {
       if (editingBook) {
         await bookService.update(editingBook.id, formData);
         success('Livro atualizado com sucesso!');
+      } else if (formData.quantidade > 1) {
+        // Cadastro em massa: gera múltiplos exemplares com IDs únicos
+        await bookService.createBulk(formData);
+        success(`${formData.quantidade} exemplares cadastrados com sucesso!`);
       } else {
         await bookService.create(formData);
         success('Livro cadastrado com sucesso!');
@@ -300,14 +304,21 @@ const Books = () => {
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Input
-              label="Quantidade"
-              type="number"
-              min="0"
-              value={formData.quantidade}
-              onChange={(e) => setFormData({ ...formData, quantidade: parseInt(e.target.value) })}
-              required
-            />
+            <div>
+              <Input
+                label={editingBook ? 'Quantidade' : 'Quantidade de Exemplares'}
+                type="number"
+                min="1"
+                value={formData.quantidade}
+                onChange={(e) => setFormData({ ...formData, quantidade: parseInt(e.target.value) || 1 })}
+                required
+              />
+              {!editingBook && formData.quantidade > 1 && (
+                <p className="text-xs text-blue-600 mt-1 font-medium">
+                  ✨ {formData.quantidade} registros independentes serão criados com IDs e códigos de barras únicos.
+                </p>
+              )}
+            </div>
             <Input
               label="Estante"
               value={formData.estante}

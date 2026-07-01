@@ -170,14 +170,18 @@ const createConsulta = async (req, res, next) => {
       });
     }
 
-    // Regra: usuário com empréstimo ativo não pode abrir consulta local
-    const emprestimoAtivoUsuario = await Loan.findOne({
-      where: { userId, status: 'ativo' }
+    // Regra: usuário com empréstimo atrasado não pode abrir consulta local
+    const emprestimoAtrasadoUsuario = await Loan.findOne({
+      where: { 
+        userId, 
+        status: 'ativo',
+        dataPrevista: { [Op.lt]: new Date() }
+      }
     });
-    if (emprestimoAtivoUsuario) {
+    if (emprestimoAtrasadoUsuario) {
       return res.status(400).json({
         success: false,
-        message: 'O usuário já possui um empréstimo ativo. Não é possível iniciar uma consulta local.'
+        message: 'O usuário possui um empréstimo atrasado e está temporariamente bloqueado. Devolva o livro em atraso para iniciar uma consulta local.'
       });
     }
 
