@@ -74,8 +74,25 @@ app.use('/api/local-consultations', localConsultationRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/student', studentRoutes);
 
-app.get('/api/health', (req, res) => {
-  res.json({ success: true, message: 'API BiblioControle funcionando!', env: process.env.NODE_ENV });
+app.get('/api/health', async (req, res) => {
+  try {
+    const { sequelize } = require('./models');
+    await sequelize.authenticate();
+    const [result] = await sequelize.query('SELECT NOW()');
+    res.json({
+      success: true,
+      message: 'API BiblioControle funcionando e conectada ao banco!',
+      dbTime: result[0],
+      env: process.env.NODE_ENV
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'Falha na conexão com o banco de dados',
+      error: err.message,
+      stack: err.stack
+    });
+  }
 });
 
 app.use(errorHandler);
