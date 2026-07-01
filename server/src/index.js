@@ -6,6 +6,7 @@
 // 4. Trusts proxy adicionado (obrigatório no Railway/Render/Koyeb para rate limiting correto)
 
 require('dotenv').config();
+require('pg-hstore'); // Força inclusão do pg-hstore na build da Vercel
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
