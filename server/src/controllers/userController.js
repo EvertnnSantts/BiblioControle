@@ -231,6 +231,8 @@ const getTurmas = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
 const getByBarcode = async (req, res, next) => {
   try {
     const { barcode } = req.params;
