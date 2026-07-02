@@ -220,6 +220,8 @@ const getStats = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
 const createBulk = async (req, res, next) => {
   try {
     const { error, value } = createBookSchema.validate(req.body);
