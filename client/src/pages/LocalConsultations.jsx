@@ -263,30 +263,6 @@ const LocalConsultations = () => {
     )}
   ];
 
-  return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Consulta Local</h1>
-        <Button onClick={() => { resetForm(); setModalOpen(true); }}>
-          <Plus className="w-4 h-4 mr-2" />
-          Nova Consulta
-        </Button>
-      </div>
-
-      <Card className="mb-6">
-        <Select
-          options={statusOptions}
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          className="w-48"
-        />
-      </Card>
-
-      <Card>
-        {loading ? (
-          <div className="flex justify-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          </div>
   const searchBooks = async (query) => {
     if (!query || query.length < 2) {
       setBookResults([]);
