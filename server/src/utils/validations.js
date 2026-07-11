@@ -72,6 +72,7 @@ const updateUserSchema = Joi.object({
   endereco: Joi.string().min(5).max(255).optional(),
   matricula: Joi.string().min(3).max(50).optional(),
   curso: Joi.string().min(2).max(100).optional(),
+  turma: Joi.string().max(50).optional().allow('', null),
   ativo: Joi.boolean().optional()
 });
 

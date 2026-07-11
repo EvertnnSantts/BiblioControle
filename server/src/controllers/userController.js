@@ -7,18 +7,23 @@ const { Op } = require('sequelize');
 const { createUserSchema, updateUserSchema, blockUserSchema } = require('../utils/validations');
 
 const getAllUsers = async (req, res, next) => {
+const getAllUsers = async (req, res, next) => {
   try {
-    const { page = 1, limit = 20, search, curso } = req.query;
+    const { page = 1, limit = 100000, search, curso } = req.query;
     const offset = (page - 1) * limit;
 
     const where = {};
 
     if (search) {
+      let searchMatricula = search;
+      if (search.startsWith('USR-')) {
+        searchMatricula = search.replace('USR-', '');
+      }
       where[Op.or] = [
         // ALTERADO: Op.iLike (case-insensitive no PostgreSQL)
         { nome: { [Op.iLike]: `%${search}%` } },
         { email: { [Op.iLike]: `%${search}%` } },
-        { matricula: { [Op.iLike]: `%${search}%` } }
+        { matricula: { [Op.iLike]: `%${searchMatricula}%` } }
       ];
     }
 
@@ -52,6 +57,11 @@ const searchUsers = async (req, res, next) => {
       });
     }
 
+    let searchMatricula = q;
+    if (q.startsWith('USR-')) {
+      searchMatricula = q.replace('USR-', '');
+    }
+
     const users = await User.findAll({
       where: {
         ativo: true,
@@ -61,7 +71,7 @@ const searchUsers = async (req, res, next) => {
           { nome: { [Op.iLike]: `%${q}%` } },
           { email: { [Op.iLike]: `%${q}%` } },
           { telefone: { [Op.iLike]: `%${q}%` } },
-          { matricula: { [Op.iLike]: `%${q}%` } }
+          { matricula: { [Op.iLike]: `%${searchMatricula}%` } }
         ]
       },
       limit: 20,
@@ -231,6 +241,8 @@ const getTurmas = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
 const getByBarcode = async (req, res, next) => {
   try {
     const { barcode } = req.params;

@@ -22,6 +22,10 @@ const LocalConsultations = () => {
   const [userSearch, setUserSearch] = useState('');
   const [userResults, setUserResults] = useState([]);
   const [searchingUsers, setSearchingUsers] = useState(false);
+  const [selectedBook, setSelectedBook] = useState(null);
+  const [bookSearch, setBookSearch] = useState('');
+  const [bookResults, setBookResults] = useState([]);
+  const [searchingBooks, setSearchingBooks] = useState(false);
   const [now, setNow] = useState(new Date());
   const [formData, setFormData] = useState({
     bookId: '',
@@ -103,7 +107,7 @@ const LocalConsultations = () => {
             error('Este livro é para empréstimo convencional. Use a aba de Empréstimos.');
             return;
           }
-          setFormData(prev => ({ ...prev, bookId: book.id }));
+          handleSelectBook(book);
           success(`Livro "${book.titulo}" selecionado!`);
         }
       } else {
@@ -114,7 +118,7 @@ const LocalConsultations = () => {
             error('Este livro é para empréstimo convencional. Use a aba de Empréstimos.');
             return;
           }
-          setFormData(prev => ({ ...prev, bookId: book.id }));
+          handleSelectBook(book);
           success(`Livro "${book.titulo}" selecionado!`);
         } else {
           const userRes = await userService.getAll({ search: code });
@@ -132,7 +136,7 @@ const LocalConsultations = () => {
     }
   };
 
-  const barcodeScanner = useBarcodeScanner(handleBarcodeScan);
+  useBarcodeScanner(handleBarcodeScan);
 
   useEffect(() => {
     fetchConsultas();
@@ -144,6 +148,9 @@ const LocalConsultations = () => {
       setSelectedUser(null);
       setUserSearch('');
       setUserResults([]);
+      setSelectedBook(null);
+      setBookSearch('');
+      setBookResults([]);
     }
   }, [modalOpen]);
 
@@ -181,6 +188,9 @@ const LocalConsultations = () => {
     });
     setSelectedUser(null);
     setUserSearch('');
+    setSelectedBook(null);
+    setBookSearch('');
+    setBookResults([]);
   };
 
   const formatTimeRemaining = (expirationDate) => {
@@ -277,10 +287,98 @@ const LocalConsultations = () => {
           <div className="flex justify-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
           </div>
-        ) : (
-          <Table columns={columns} data={consultas} emptyMessage="Nenhuma consulta local encontrada" />
-        )}
-      </Card>
+  const searchBooks = async (query) => {
+    if (!query || query.length < 2) {
+      setBookResults([]);
+      return;
+    }
+    setSearchingBooks(true);
+    try {
+      const response = await bookService.getAll({ search: query, limit: 10 });
+      const filtered = (response.data.data.books || []).filter(b => b.consultaLocal && !b.consultaAtiva);
+      setBookResults(filtered);
+    } catch (err) {
+      console.error('Erro ao buscar livros:', err);
+    } finally {
+      setSearchingBooks(false);
+    }
+  };
+
+  const handleSelectBook = (book) => {
+    setSelectedBook(book);
+    setBookSearch(`${book.titulo} (${book.autor})`);
+    setBookResults([]);
+    setFormData(prev => ({ ...prev, bookId: book.id }));
+  };
+
+  const handleBookSearchKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (bookResults.length === 1) {
+        handleSelectBook(bookResults[0]);
+      } else if (bookSearch.trim()) {
+        const code = bookSearch.trim();
+        if (code.startsWith('LIV-') || code.length > 5) {
+          bookService.getByBarcode(code)
+            .then(res => {
+              if (res.data.success && res.data.data.book) {
+                handleSelectBook(res.data.data.book);
+                success(`Livro "${res.data.data.book.titulo}" selecionado!`);
+              }
+            })
+            .catch(() => {});
+        }
+      }
+    }
+  };
+
+  const handleUserSearchKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (userResults.length === 1) {
+        handleSelectUser(userResults[0]);
+      } else if (userSearch.trim()) {
+        const code = userSearch.trim();
+        if (code.startsWith('USR-') || code.length > 5) {
+          userService.getByBarcode(code)
+            .then(res => {
+              if (res.data.success && res.data.data.user) {
+                handleSelectUser(res.data.data.user);
+                success(`Aluno ${res.data.data.user.nome} selecionado!`);
+              }
+            })
+            .catch(() => {});
+        }
+      }
+    }
+  };
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">Consultas Locais</h1>
+        <Button onClick={() => setModalOpen(true)}>
+          <Plus className="w-4 h-4 mr-2" />
+          Nova Consulta
+        </Button>
+      </div>
+
+      <form className="search-bar" onSubmit={(e) => e.preventDefault()}>
+        <Input
+          placeholder="Buscar por nome, matrícula ou livro..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          icon={Search}
+        />
+      </form>
+
+      {loading ? (
+        <div className="flex justify-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      ) : (
+        <Table columns={columns} data={consultas} emptyMessage="Nenhuma consulta local encontrada" />
+      )}
 
       <Modal
         isOpen={modalOpen}
@@ -289,24 +387,6 @@ const LocalConsultations = () => {
         size="lg"
       >
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Campo de Leitura Rápida via Código de Barras / QR Code */}
-          <div className="p-3 bg-teal-50 border border-teal-200 rounded-lg">
-            <label className="block text-sm font-semibold text-teal-800 mb-1">
-              🔌 Leitor de Código de Barras / QR Code
-            </label>
-            <Input
-              ref={barcodeScanner.inputRef}
-              placeholder="Bipe a carteira do aluno ou o livro aqui..."
-              value={barcodeScanner.value}
-              onChange={barcodeScanner.handleChange}
-              onKeyDown={barcodeScanner.handleKeyDown}
-              className="border-teal-300 focus:ring-teal-500 focus:border-teal-500"
-            />
-            <p className="text-xs text-teal-600 mt-1">
-              Posicione o cursor no campo acima para bipar com o leitor Comtac PS-750.
-            </p>
-          </div>
-
           <div className="relative">
             <label className="block text-sm font-medium text-gray-700 mb-1">Usuário</label>
             <div className="relative">
@@ -319,6 +399,7 @@ const LocalConsultations = () => {
                   setFormData({ ...formData, userId: '' });
                   searchUsers(e.target.value);
                 }}
+                onKeyDown={handleUserSearchKeyDown}
                 icon={Search}
               />
             </div>
@@ -351,15 +432,63 @@ const LocalConsultations = () => {
             )}
           </div>
 
-          <div>
-            <Select
-              label="Livro (apenas livros de consulta)"
-              options={bookOptions}
-              value={formData.bookId}
-              onChange={(e) => setFormData({ ...formData, bookId: parseInt(e.target.value) })}
-              placeholder="Selecione um livro"
-              required
-            />
+          {/* Campo de busca de livro */}
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Livro (apenas livros de consulta)</label>
+            <div className="relative">
+              <Input
+                placeholder="Buscar por título, autor ou código de barras..."
+                value={bookSearch}
+                onChange={(e) => {
+                  setBookSearch(e.target.value);
+                  setSelectedBook(null);
+                  setFormData({ ...formData, bookId: '' });
+                  searchBooks(e.target.value);
+                }}
+                onKeyDown={handleBookSearchKeyDown}
+                icon={BookOpen}
+              />
+            </div>
+            {/* Resultados da busca de livros */}
+            {bookResults.length > 0 && (
+              <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto">
+                {bookResults.map(book => {
+                  const isAvailable = !book.consultaAtiva;
+                  return (
+                    <button
+                      key={book.id}
+                      type="button"
+                      disabled={!isAvailable}
+                      onClick={() => handleSelectBook(book)}
+                      className={`w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-3 border-b border-gray-100 last:border-0 ${!isAvailable ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    >
+                      <div className="bg-green-100 p-2 rounded-full">
+                        <BookOpen className="w-4 h-4 text-green-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-gray-800 truncate">{book.titulo}</div>
+                        <div className="text-sm text-gray-500 truncate">
+                          {book.autor} · {book.genero}
+                          {book.estante && ` · Estante: ${book.estante}`}
+                        </div>
+                      </div>
+                      <div className="text-xs font-semibold">
+                        {isAvailable ? (
+                          <span className="text-green-600">Disponível</span>
+                        ) : (
+                          <span className="text-red-600">Em Consulta</span>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            {searchingBooks && (
+              <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg p-4 text-center text-gray-500">
+                Buscando...
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

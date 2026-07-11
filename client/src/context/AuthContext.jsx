@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
     const response = await authService.studentLogin({ email, password });
     const { token, user } = response.data.data;
     sessionStorage.setItem('token', token);
-    setUser(user);
+    setUser({ ...user, role: 'student' });
     return response.data;
   };
 

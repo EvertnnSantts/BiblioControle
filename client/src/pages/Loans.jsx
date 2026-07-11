@@ -25,6 +25,10 @@ const Loans = () => {
   const [userSearch, setUserSearch] = useState('');
   const [userResults, setUserResults] = useState([]);
   const [searchingUsers, setSearchingUsers] = useState(false);
+  const [selectedBook, setSelectedBook] = useState(null);
+  const [bookSearch, setBookSearch] = useState('');
+  const [bookResults, setBookResults] = useState([]);
+  const [searchingBooks, setSearchingBooks] = useState(false);
   const [formData, setFormData] = useState({
     bookId: '',
     userId: '',
@@ -126,7 +130,7 @@ const Loans = () => {
             error('Este livro é exclusivo para consulta local. Use a aba de Consultas.');
             return;
           }
-          setFormData(prev => ({ ...prev, bookId: book.id }));
+          handleSelectBook(book);
           success(`Livro "${book.titulo}" selecionado!`);
         }
       } else {
@@ -138,7 +142,7 @@ const Loans = () => {
             error('Este livro é exclusivo para consulta local. Use a aba de Consultas.');
             return;
           }
-          setFormData(prev => ({ ...prev, bookId: book.id }));
+          handleSelectBook(book);
           success(`Livro "${book.titulo}" selecionado!`);
         } else {
           // Tentar buscar usuário por matrícula
@@ -157,8 +161,7 @@ const Loans = () => {
     }
   };
 
-  const barcodeScanner = useBarcodeScanner(handleBarcodeScan);
-
+  useBarcodeScanner(handleBarcodeScan);
 
   useEffect(() => {
     fetchLoans();
@@ -172,6 +175,9 @@ const Loans = () => {
       setUserResults([]);
       setUserHasActiveLoan(false);
       setUserHasActiveConsultation(false);
+      setSelectedBook(null);
+      setBookSearch('');
+      setBookResults([]);
     }
   }, [modalOpen]);
 
@@ -224,6 +230,9 @@ const Loans = () => {
     setUserSearch('');
     setUserHasActiveLoan(false);
     setUserHasActiveConsultation(false);
+    setSelectedBook(null);
+    setBookSearch('');
+    setBookResults([]);
   };
 
   const statusOptions = [
@@ -305,11 +314,78 @@ const Loans = () => {
     )}
   ];
 
+  const searchBooks = async (query) => {
+    if (!query || query.length < 2) {
+      setBookResults([]);
+      return;
+    }
+    setSearchingBooks(true);
+    try {
+      const response = await bookService.getAll({ search: query, limit: 10 });
+      const filtered = (response.data.data.books || []).filter(b => !b.consultaLocal);
+      setBookResults(filtered);
+    } catch (err) {
+      console.error('Erro ao buscar livros:', err);
+    } finally {
+      setSearchingBooks(false);
+    }
+  };
+
+  const handleSelectBook = (book) => {
+    setSelectedBook(book);
+    setBookSearch(`${book.titulo} (${book.autor})`);
+    setBookResults([]);
+    setFormData(prev => ({ ...prev, bookId: book.id }));
+  };
+
+  const handleBookSearchKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const availableBooks = bookResults.filter(b => getAvailableQuantity(b) > 0);
+      if (availableBooks.length === 1) {
+        handleSelectBook(availableBooks[0]);
+      } else if (bookSearch.trim()) {
+        const code = bookSearch.trim();
+        if (code.startsWith('LIV-') || code.length > 5) {
+          bookService.getByBarcode(code)
+            .then(res => {
+              if (res.data.success && res.data.data.book) {
+                handleSelectBook(res.data.data.book);
+                success(`Livro "${res.data.data.book.titulo}" selecionado!`);
+              }
+            })
+            .catch(() => {});
+        }
+      }
+    }
+  };
+
+  const handleUserSearchKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (userResults.length === 1) {
+        handleSelectUser(userResults[0]);
+      } else if (userSearch.trim()) {
+        const code = userSearch.trim();
+        if (code.startsWith('USR-') || code.length > 5) {
+          userService.getByBarcode(code)
+            .then(res => {
+              if (res.data.success && res.data.data.user) {
+                handleSelectUser(res.data.data.user);
+                success(`Aluno ${res.data.data.user.nome} selecionado!`);
+              }
+            })
+            .catch(() => {});
+        }
+      }
+    }
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Empréstimos</h1>
-        <Button onClick={() => { resetForm(); setModalOpen(true); }}>
+        <Button onClick={() => setModalOpen(true)}>
           <Plus className="w-4 h-4 mr-2" />
           Novo Empréstimo
         </Button>
@@ -317,12 +393,22 @@ const Loans = () => {
 
       {/* Filters */}
       <Card className="mb-6">
-        <Select
-          options={statusOptions}
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          className="w-48"
-        />
+        <div className="flex flex-wrap gap-4">
+          <div className="flex-1 min-w-[200px]">
+            <Input
+              placeholder="Buscar empréstimos..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              icon={Search}
+            />
+          </div>
+          <Select
+            options={statusOptions}
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="w-48"
+          />
+        </div>
       </Card>
 
       {/* Table */}
@@ -344,24 +430,6 @@ const Loans = () => {
         size="lg"
       >
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Campo de Leitura Rápida via Código de Barras / QR Code */}
-          <div className="p-3 bg-teal-50 border border-teal-200 rounded-lg">
-            <label className="block text-sm font-semibold text-teal-800 mb-1">
-              🔌 Leitor de Código de Barras / QR Code
-            </label>
-            <Input
-              ref={barcodeScanner.inputRef}
-              placeholder="Bipe a carteira do aluno ou o livro aqui..."
-              value={barcodeScanner.value}
-              onChange={barcodeScanner.handleChange}
-              onKeyDown={barcodeScanner.handleKeyDown}
-              className="border-teal-300 focus:ring-teal-500 focus:border-teal-500"
-            />
-            <p className="text-xs text-teal-600 mt-1">
-              Posicione o cursor no campo acima para bipar com o leitor Comtac PS-750.
-            </p>
-          </div>
-
           {/* Campo de busca de usuário */}
           <div className="relative">
             <label className="block text-sm font-medium text-gray-700 mb-1">Usuário</label>
@@ -377,6 +445,7 @@ const Loans = () => {
                   setUserHasActiveConsultation(false);
                   searchUsers(e.target.value);
                 }}
+                onKeyDown={handleUserSearchKeyDown}
                 icon={Search}
               />
             </div>
@@ -441,23 +510,71 @@ const Loans = () => {
             </div>
           )}
 
-          {/* Campo de livro com quantidade disponível */}
-          <div>
-            <Select
-              label="Livro"
-              options={bookOptions}
-              value={formData.bookId}
-              onChange={(e) => setFormData({ ...formData, bookId: parseInt(e.target.value) })}
-              placeholder="Selecione um livro"
-              required
-            />
-            {formData.bookId && (
+          {/* Campo de busca de livro */}
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Livro</label>
+            <div className="relative">
+              <Input
+                placeholder="Buscar por título, autor ou código de barras..."
+                value={bookSearch}
+                onChange={(e) => {
+                  setBookSearch(e.target.value);
+                  setSelectedBook(null);
+                  setFormData({ ...formData, bookId: '' });
+                  searchBooks(e.target.value);
+                }}
+                onKeyDown={handleBookSearchKeyDown}
+                icon={BookOpen}
+              />
+            </div>
+            {/* Resultados da busca de livros */}
+            {bookResults.length > 0 && (
+              <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto">
+                {bookResults.map(book => {
+                  const availableQuantity = getAvailableQuantity(book);
+                  const isAvailable = availableQuantity > 0 || book.consultaLocal;
+                  return (
+                    <button
+                      key={book.id}
+                      type="button"
+                      disabled={!isAvailable}
+                      onClick={() => handleSelectBook(book)}
+                      className={`w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center gap-3 border-b border-gray-100 last:border-0 ${!isAvailable ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    >
+                      <div className="bg-green-100 p-2 rounded-full">
+                        <BookOpen className="w-4 h-4 text-green-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-gray-800 truncate">{book.titulo}</div>
+                        <div className="text-sm text-gray-500 truncate">
+                          {book.autor} · {book.genero}
+                          {book.estante && ` · Estante: ${book.estante}`}
+                        </div>
+                      </div>
+                      <div className="text-xs font-semibold">
+                        {book.consultaLocal ? (
+                          <span className="text-orange-600">Consulta Local</span>
+                        ) : isAvailable ? (
+                          <span className="text-green-600">Disp: {availableQuantity}</span>
+                        ) : (
+                          <span className="text-red-600">Indisponível</span>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            {searchingBooks && (
+              <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg p-4 text-center text-gray-500">
+                Buscando...
+              </div>
+            )}
+            {selectedBook && (
               <div className="mt-2 p-2 bg-blue-50 rounded-lg flex items-center gap-2">
                 <BookOpen className="w-4 h-4 text-blue-600" />
                 <span className="text-sm text-blue-700">
-                  {books.find(b => b.id === formData.bookId) && 
-                    `${getAvailableQuantity(books.find(b => b.id === formData.bookId))} exemplar(es) disponível(is)`
-                  }
+                  {getAvailableQuantity(selectedBook)} exemplar(es) disponível(is)
                 </span>
               </div>
             )}

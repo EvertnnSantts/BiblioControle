@@ -1,43 +1,47 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 
 export function useBarcodeScanner(onScan) {
-  const [value, setValue] = useState('');
-  const inputRef = useRef(null);
+  const bufferRef = useRef('');
+  const timeoutRef = useRef(null);
 
-  const focusInput = useCallback(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, []);
-
-  // Foca automaticamente ao montar a tela
   useEffect(() => {
-    focusInput();
-  }, [focusInput]);
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      const code = value.trim();
-      if (code) {
-        onScan(code);
-        setValue('');
+    const handleKeyDown = (e) => {
+      // Enter key indicates end of scan
+      if (e.key === 'Enter') {
+        const code = bufferRef.current.trim();
+        if (code && code.length > 3) {
+          e.preventDefault();
+          onScan(code);
+          bufferRef.current = '';
+          if (timeoutRef.current) clearTimeout(timeoutRef.current);
+          return;
+        }
+        bufferRef.current = '';
+        return;
       }
-    }
-  };
 
-  const handleChange = (e) => {
-    setValue(e.target.value);
-  };
+      // Collect only single characters (printable characters)
+      if (e.key.length === 1) {
+        bufferRef.current += e.key;
 
-  return {
-    value,
-    setValue,
-    inputRef,
-    handleChange,
-    handleKeyDown,
-    focusInput
-  };
+        // Clear existing timeout
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+
+        // Set a timeout to clear the buffer if no character is typed within 50ms
+        timeoutRef.current = setTimeout(() => {
+          bufferRef.current = '';
+        }, 50);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [onScan]);
 }
 
 export default useBarcodeScanner;

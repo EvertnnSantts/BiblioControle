@@ -352,13 +352,22 @@ const BarcodeAdmin = () => {
         }
 
         @media print {
-          /* Oculta tudo exceto a área de impressão */
-          body > * {
-            display: none !important;
+          body {
+            visibility: hidden;
+            background: white !important;
+          }
+          .print-area,
+          .print-area * {
+            visibility: visible;
           }
           .print-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
             display: block !important;
             padding: 10mm;
+            margin: 0;
           }
           .print-header {
             font-size: 11pt;
@@ -375,6 +384,16 @@ const BarcodeAdmin = () => {
           .barcode-label {
             border: 1px solid #000;
             page-break-inside: avoid;
+          }
+          html, body, #root, .min-h-screen, .flex, main, .p-6 {
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            background: none !important;
+            box-shadow: none !important;
+            max-width: none !important;
+            width: 100% !important;
+            height: auto !important;
           }
         }
       `}</style>

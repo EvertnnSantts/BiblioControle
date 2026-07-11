@@ -10,7 +10,7 @@ const crypto = require('crypto');
 
 const getAllBooks = async (req, res, next) => {
   try {
-    const { page = 1, limit = 20, search, genero, autor, situacao } = req.query;
+    const { page = 1, limit = 100000, search, genero, autor, situacao } = req.query;
     const offset = (page - 1) * limit;
 
     const where = {};
@@ -19,7 +19,8 @@ const getAllBooks = async (req, res, next) => {
       where[Op.or] = [
         // ALTERADO: Op.like → Op.iLike (case-insensitive no PostgreSQL)
         { titulo: { [Op.iLike]: `%${search}%` } },
-        { autor: { [Op.iLike]: `%${search}%` } }
+        { autor: { [Op.iLike]: `%${search}%` } },
+        { codigoBarras: { [Op.iLike]: `%${search}%` } }
       ];
     }
 
@@ -220,6 +221,8 @@ const getStats = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
 const createBulk = async (req, res, next) => {
   try {
     const { error, value } = createBookSchema.validate(req.body);
