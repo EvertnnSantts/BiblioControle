@@ -25,6 +25,7 @@ const Loans = () => {
   const [userSearch, setUserSearch] = useState('');
   const [userResults, setUserResults] = useState([]);
   const [searchingUsers, setSearchingUsers] = useState(false);
+  const [search, setSearch] = useState('');
   const [selectedBook, setSelectedBook] = useState(null);
   const [bookSearch, setBookSearch] = useState('');
   const [bookResults, setBookResults] = useState([]);
@@ -41,7 +42,10 @@ const Loans = () => {
 
   const fetchLoans = async () => {
     try {
-      const params = { status: status || undefined };
+      const params = {
+        status: status || undefined,
+        search: search || undefined
+      };
       const response = await loanService.getAll(params);
       setLoans(response.data.data.loans);
     } catch (err) {
@@ -165,7 +169,7 @@ const Loans = () => {
 
   useEffect(() => {
     fetchLoans();
-  }, [status]);
+  }, [status, search]);
 
   useEffect(() => {
     if (modalOpen) {
