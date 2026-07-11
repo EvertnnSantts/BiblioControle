@@ -22,6 +22,7 @@ const LocalConsultations = () => {
   const [userSearch, setUserSearch] = useState('');
   const [userResults, setUserResults] = useState([]);
   const [searchingUsers, setSearchingUsers] = useState(false);
+  const [search, setSearch] = useState('');
   const [selectedBook, setSelectedBook] = useState(null);
   const [bookSearch, setBookSearch] = useState('');
   const [bookResults, setBookResults] = useState([]);
@@ -45,7 +46,7 @@ const LocalConsultations = () => {
 
   const fetchConsultas = async () => {
     try {
-      const params = { status: status || undefined };
+      const params = { status: status || undefined, search: search || undefined };
       const response = await localConsultationService.getAll(params);
       setConsultas(response.data.data.consultas);
     } catch (err) {
@@ -140,7 +141,7 @@ const LocalConsultations = () => {
 
   useEffect(() => {
     fetchConsultas();
-  }, [status]);
+  }, [status, search]);
 
   useEffect(() => {
     if (modalOpen) {
