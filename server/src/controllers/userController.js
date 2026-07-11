@@ -7,7 +7,6 @@ const { Op } = require('sequelize');
 const { createUserSchema, updateUserSchema, blockUserSchema } = require('../utils/validations');
 
 const getAllUsers = async (req, res, next) => {
-const getAllUsers = async (req, res, next) => {
   try {
     const { page = 1, limit = 100000, search, curso } = req.query;
     const offset = (page - 1) * limit;
@@ -20,7 +19,6 @@ const getAllUsers = async (req, res, next) => {
         searchMatricula = search.replace('USR-', '');
       }
       where[Op.or] = [
-        // ALTERADO: Op.iLike (case-insensitive no PostgreSQL)
         { nome: { [Op.iLike]: `%${search}%` } },
         { email: { [Op.iLike]: `%${search}%` } },
         { matricula: { [Op.iLike]: `%${searchMatricula}%` } }
@@ -67,7 +65,6 @@ const searchUsers = async (req, res, next) => {
         ativo: true,
         [Op.or]: [
           { id: parseInt(q) || 0 },
-          // ALTERADO: Op.iLike
           { nome: { [Op.iLike]: `%${q}%` } },
           { email: { [Op.iLike]: `%${q}%` } },
           { telefone: { [Op.iLike]: `%${q}%` } },
@@ -163,7 +160,6 @@ const deleteUser = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Usuário não encontrado' });
     }
 
-    // Bloqueia exclusão apenas se houver empréstimos ATIVOS
     const emprestimosAtivos = await Loan.count({ where: { userId: id, status: 'ativo' } });
     if (emprestimosAtivos > 0) {
       return res.status(400).json({
@@ -172,7 +168,6 @@ const deleteUser = async (req, res, next) => {
       });
     }
 
-    // Deletar TODOS os empréstimos não-ativos (devolvido, atrasado, bloqueado) para liberar a FK
     await Loan.destroy({
       where: {
         userId: id,
@@ -264,14 +259,14 @@ const getByBarcode = async (req, res, next) => {
 };
 
 module.exports = {
-  getAllUsers, 
-  searchUsers, 
-  getUserById, 
-  createUser, 
-  updateUser, 
-  deleteUser, 
-  blockUser, 
-  getCursos, 
+  getAllUsers,
+  searchUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+  blockUser,
+  getCursos,
   getTurmas,
   getByBarcode
 };
